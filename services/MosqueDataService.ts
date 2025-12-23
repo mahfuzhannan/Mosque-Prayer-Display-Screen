@@ -95,7 +95,7 @@ export async function getCalendarPrintMonthlyPrayerTimesForYear(year: string): P
 
     map.get(prayer_time.month)!.prayer_times.push({
       ...prayer_time,
-      date: date.format("YYYY-MM-DD"),
+      date: date.toDate(),
     });
   }
 
