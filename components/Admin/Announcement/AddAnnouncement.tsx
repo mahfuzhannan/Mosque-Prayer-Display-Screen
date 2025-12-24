@@ -1,6 +1,6 @@
 "use client"
 
-import type { AnnouncementData } from "@/types/AnnouncementType"
+import { AnnouncementData } from "@/types/AnnouncementType"
 import { useEffect, useState } from "react"
 import { PrimaryButton } from '@/components/ui/Buttons'
 import { Modal } from '@/components/ui/Modal'

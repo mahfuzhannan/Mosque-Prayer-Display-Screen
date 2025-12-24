@@ -121,7 +121,7 @@ The Admin interface will allow you to manage the screen from your phone these in
 ### Prerequisites
 
 - Google Account
-- Google Cloud Project (Optional for Admin interface)
+- Google Cloud Project
 
 ### Step 1: Setup Google Cloud project
 

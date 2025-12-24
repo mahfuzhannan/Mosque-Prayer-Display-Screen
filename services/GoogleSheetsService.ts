@@ -3,12 +3,12 @@
 import { AnnouncementData } from '@/types/AnnouncementType'
 import { google } from 'googleapis'
 import { getSession } from '@/app/auth'
-import { Configuration, ConfigurationJson } from '@/types/MosqueDataType'
 import moment from 'moment'
 import {
   sheetsUtilFlattenedJsonToRows,
   sheetsUtilValuesToNestedJson,
 } from '@/services/GoogleSheetsUtil'
+import { ConfigurationJson } from '@/types/ConfigurationType'
 
 const SPREADSHEET_ID = process.env.SPREADSHEET_ID ?? ''
 const ADMIN_GOOGLE_SA_PRIVATE_KEY = process.env.ADMIN_GOOGLE_SA_PRIVATE_KEY
@@ -87,7 +87,7 @@ export async function sheetsUpdateAnnouncement(announcement: AnnouncementData): 
   await sheetsUpdateConfigurationData(data)
 }
 
-export async function sheetsUpdateConfigurationData(data: Configuration): Promise<void> {
+export async function sheetsUpdateConfigurationData(data: ConfigurationJson): Promise<void> {
   const sheets = await getUserSheetsClient()
   // We need to convert the data from JSON to rows for the Google Sheets API
   const rows = sheetsUtilFlattenedJsonToRows(data)

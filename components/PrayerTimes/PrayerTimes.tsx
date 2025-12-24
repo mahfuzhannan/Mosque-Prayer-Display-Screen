@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { getNextPrayer } from "@/services/PrayerTimeService"
 import { DailyPrayerTime } from "@/types/DailyPrayerTimeType"
 import moment from "moment"
+import { useConfiguration } from '@/hooks/useConfiguration'
 
 export default function PrayerTimes({
   today,
@@ -40,7 +41,9 @@ export default function PrayerTimes({
     },
   ]
 
+  const configuration = useConfiguration()
   const [nextPrayerTime, setNextPrayerTime] = useState(getNextPrayer(today))
+  const isTomorrowEnabled = configuration.feature.prayer_time_tomorrow.enabled
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -61,7 +64,7 @@ export default function PrayerTimes({
           <th className="sr-only">Prayer time</th>
           <th className="md:text-5xl">Begins</th>
           <th className="md:text-5xl">Jama&apos;ah</th>
-          <th className="md:text-5xl">Tomorrow</th>
+          {isTomorrowEnabled && <th className={'md:text-5xl'}>Tomorrow</th>}
         </tr>
       </thead>
       <tbody>
@@ -106,7 +109,7 @@ export default function PrayerTimes({
                 )}
               </span>
             </td>
-            <td className={`text-xl md:text-6xl`}>
+            {isTomorrowEnabled && (<td className={`text-xl md:text-6xl`}>
               <span
                 className={
                   nextPrayerTime.today === false &&
@@ -119,7 +122,7 @@ export default function PrayerTimes({
                   "h:mm",
                 )}
               </span>
-            </td>
+            </td>)}
           </tr>
         ))}
       </tbody>
