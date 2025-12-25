@@ -1,10 +1,10 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { AnnouncementData } from '@/types/AnnouncementType'
 import moment from 'moment'
-import { LoadingSpinner } from '@/components/ui/LoadingSpinner'
 import { createAnnouncement } from '@/services/MosqueDataService'
+import { Spinner } from "@/components/ui/spinner"
 
 interface AnnouncementFormProps {
   onComplete: (announcement: AnnouncementData) => void;
@@ -68,8 +68,9 @@ export function AnnouncementForm ({
     >
       {/* Type Selector */}
       <div>
-        <label className="block text-sm font-medium mb-1">Announcement
-          Type</label>
+        <label className="block text-sm font-medium mb-1">
+          Announcement Type
+        </label>
         <select
           className="w-full rounded-xl border border-slate-300 px-4 py-2 text-sm bg-slate-50 focus:ring-2 focus:ring-mosqueBrand-onPrimary focus:border-mosqueBrand-onPrimary outline-none"
           value={type}
@@ -107,8 +108,9 @@ export function AnnouncementForm ({
 
       {/* Duration */}
       <div>
-        <label className="block text-sm font-medium mb-1">Duration
-          (minutes)</label>
+        <label className="block text-sm font-medium mb-1">
+          Duration (minutes)
+        </label>
         <input
           type="number"
           min={1}
@@ -121,10 +123,11 @@ export function AnnouncementForm ({
       </div>
 
       {/* Car Reg Number (only if Car announcement) */}
-      {type === 'Car' && (
+      {type === "Car" && (
         <div>
-          <label className="block text-sm font-medium mb-1">Car Registration
-            Number</label>
+          <label className="block text-sm font-medium mb-1">
+            Car Registration Number
+          </label>
           <input
             type="text"
             placeholder=""
@@ -149,12 +152,10 @@ export function AnnouncementForm ({
         />
       </div>
 
-      {error && (
-        <p className="text-red-500">{error}</p>
-      )}
+      {error && <p className="text-red-500">{error}</p>}
 
       {isLoading ? (
-        <LoadingSpinner/>
+        <Spinner className={"text-mosqueBrand-highlight"} />
       ) : (
         <button
           type="submit"
@@ -164,8 +165,6 @@ export function AnnouncementForm ({
           Submit Announcement
         </button>
       )}
-
-
     </form>
   )
 }
