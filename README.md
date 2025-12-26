@@ -44,13 +44,29 @@ All of the code sits here:
 
 ### Mosque views
 
-<img src="./public/demo-mosque-view-1.png" />
+<img src="./public/screenshots/demo-mosque-view-1.png" />
 
-<img src="./public/demo-mosque-view-2.png" />
+<img src="./public/screenshots/demo-mosque-view-2.png" />
+
+### Hide Tomorrow Prayer Time
+<img src="public/screenshots/demo-mosque-view-3.png" />
+
+### Announcements
+
+<img src="./public/screenshots/demo-mosque-announcement-car.png" />
+
+### Print Calendars
+
+<img src="public/screenshots/demo-mosque-calendar-prints-1.png" />
+<img src="public/screenshots/demo-mosque-calendar-prints-2.png" />
 
 ### Mobile app
 
-<img src="./public/demo-mobile-view.png" width="500px" />
+<img src="./public/screenshots/demo-mobile-view.png" width="500px" />
+
+### Admin Page
+
+<img src="./public/screenshots/demo-admin-view.png/"/>
 
 ## How to get set up as a Mosque
 
