@@ -42,7 +42,7 @@ export function AnnouncementForm ({
         add(duration, 'minutes').
         format('HH:mm'),
       message,
-      car_reg_number: type === 'Car' ? carReg : null,
+      car_reg_number: type === 'Car' ? carReg : "",
     }
 
     console.log('Submitting:', announcement)
