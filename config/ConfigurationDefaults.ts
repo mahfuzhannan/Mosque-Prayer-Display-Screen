@@ -7,7 +7,7 @@ export const configurationDefaults : ConfigurationJson = {
       enabled: false,
     },
     prayer_time_tomorrow: {
-      enabled: false,
+      enabled: true,
     }
   }
 }
