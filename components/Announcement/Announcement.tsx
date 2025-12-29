@@ -18,7 +18,7 @@ export default function Announcement () {
         catch((error) => {
           console.log(`error fetching announcements: ${error}`)
         })
-    }, 10 * 1000)
+    }, 60000) // every 60 seconds
 
     return () => clearInterval(interval)
   }, [])
