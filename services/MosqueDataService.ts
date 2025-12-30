@@ -30,10 +30,8 @@ const useSheetsClient = isSheetsClientEnabled()
 
 export async function getMosqueData (): Promise<MosqueData> {
   if (useSheetsClient) {
-    console.info("Fetching data from sheets client")
     return await sheetsGetMosqueData()
   } else {
-    console.info("Fetching data from mosque api endpoint")
     const response = await fetch(MOSQUE_API_ENDPOINT, {
       next: { revalidate: 30 },
     })
@@ -146,7 +144,6 @@ export async function getMetaData (): Promise<MosqueMetadataType> {
 export async function getConfiguration (): Promise<ConfigurationJson> {
   const { config } = await getMosqueData()
   const mergedConfig = deepmerge(configurationDefaults, config ?? {})
-  console.log(`configuration: ${JSON.stringify(mergedConfig)}`)
   return mergedConfig
 }
 

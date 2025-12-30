@@ -60,10 +60,6 @@ export default async function Home() {
     )
   })
 
-  console.log(
-    `configuration.feature.announcement.enabled: ${config.feature.announcement.enabled}`,
-  )
-
   return (
     <ConfigurationProvider config={config}>
       <div className="bg-mosqueBrand min-h-screen min-w-full">

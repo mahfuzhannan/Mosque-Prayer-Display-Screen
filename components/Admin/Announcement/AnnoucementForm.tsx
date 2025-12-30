@@ -45,13 +45,11 @@ export function AnnouncementForm ({
       car_reg_number: type === 'Car' ? carReg : "",
     }
 
-    console.log('Submitting:', announcement)
     // Perform your API POST or upload here...
 
     setIsLoading(true)
     try {
       await createAnnouncement(announcement)
-      console.log('Announcement added successfully')
       onComplete(announcement)
     } catch(error) {
       setError(`Error creating announcement: ${error}`)

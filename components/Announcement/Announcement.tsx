@@ -15,7 +15,7 @@ export default function Announcement () {
         setNextAnnouncement(announcement)
       })
       .catch((error) => {
-        console.log(`error fetching announcements: ${error}`)
+        console.error(`error fetching announcements: ${error}`)
       })
   }
 
