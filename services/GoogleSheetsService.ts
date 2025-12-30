@@ -1,8 +1,7 @@
 'use server'
 
 import { AnnouncementData } from '@/types/AnnouncementType'
-import { google } from 'googleapis'
-import { getSession } from '@/app/auth'
+import { google, sheets_v4 } from "googleapis"
 import moment from 'moment'
 import {
   prayerTimeValuesToPrayerTimesJsonSchema,
@@ -16,6 +15,7 @@ import { configurationDefaults } from "@/config/ConfigurationDefaults"
 import { MosqueData, MosqueMetadataType } from "@/types/MosqueDataType"
 import { DailyPrayerTime } from "@/types/DailyPrayerTimeType"
 import { JummahTimes } from "@/types/JummahTimesType"
+import { cacheLife, cacheTag } from "next/cache"
 
 const SPREADSHEET_ID = process.env.SPREADSHEET_ID ?? ''
 const ADMIN_GOOGLE_SA_PRIVATE_KEY = process.env.ADMIN_GOOGLE_SA_PRIVATE_KEY
@@ -28,12 +28,11 @@ const SHEET_NAMES = {
   Configuration: "Configuration",
 }
 
-export async function getUserSheetsClient() {
-  const session = await getSession() // next-auth v5 app router helper
+let sheetsClient: sheets_v4.Sheets | null = null
 
-  if (!session) {
-    throw new Error('Not authenticated with Google')
-  }
+
+export async function getUserSheetsClient() {
+  if (sheetsClient) return sheetsClient
 
   if (!ADMIN_GOOGLE_SA_EMAIL || !ADMIN_GOOGLE_SA_PRIVATE_KEY) {
     throw new Error("Credentials have not been set")
@@ -46,16 +45,12 @@ export async function getUserSheetsClient() {
       scopes: ["https://www.googleapis.com/auth/spreadsheets"],
     })
 
-    const sheets = google.sheets({
+    sheetsClient = google.sheets({
       version: "v4",
       auth: googleAuthJwt,
     })
 
-    await sheets.spreadsheets.get({
-      spreadsheetId: SPREADSHEET_ID,
-    })
-
-    return sheets
+    return sheetsClient
   } catch (err: any) {
     throw new Error(`Google Service Account error: ${err.message}`)
   }
@@ -67,7 +62,7 @@ export async function isSheetsClientReady(): Promise<boolean> {
     await sheets.spreadsheets.get({
       spreadsheetId: SPREADSHEET_ID,
     })
-    return sheets != null
+    return true
   } catch (error: any) {
     console.error(error)
     return false
@@ -75,6 +70,9 @@ export async function isSheetsClientReady(): Promise<boolean> {
 }
 
 export async function sheetsGetMosqueData(): Promise<MosqueData> {
+  "use cache"
+  cacheLife({ revalidate: 30 })
+  cacheTag("configuration")
   try {
     const configurationData = await sheetsGetConfigurationData()
     const prayerTimes = await sheetsGetPrayerData()
