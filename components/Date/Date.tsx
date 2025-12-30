@@ -3,7 +3,7 @@
 import moment from "moment-hijri"
 
 export default function Date() {
-  const englishDate = moment().format("dddd D MMMM YYYY")
+  const englishDate = moment().locale("en").format("dddd D MMMM YYYY")
   const hijriDate = moment().locale("en").format("iD iMMMM iYYYY")
 
   return (

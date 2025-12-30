@@ -19,7 +19,7 @@ export async function TodayPrayerTime({
   showHijri = false,
 }: Props) {
   const convertTime = (time: string) =>
-    moment(time, ["HH:mm"]).format(timeFormat)
+    moment(time, ["HH:mm"]).locale("en").format(timeFormat)
 
   const today: DailyPrayerTime = await getPrayerTimesForToday()
   const englishDate = moment().format("D MMMM YYYY")
