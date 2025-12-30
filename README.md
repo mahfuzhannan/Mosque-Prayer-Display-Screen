@@ -49,7 +49,7 @@ All of the code sits here:
 <img src="./public/screenshots/demo-mosque-view-2.png" />
 
 ### Hide Tomorrow Prayer Time
-<img src="public/screenshots/demo-mosque-view-3.png" />
+<img src="./public/screenshots/demo-mosque-view-3.png" />
 
 ### Announcements
 
@@ -57,8 +57,8 @@ All of the code sits here:
 
 ### Print Calendars
 
-<img src="public/screenshots/demo-mosque-calendar-prints-1.png" />
-<img src="public/screenshots/demo-mosque-calendar-prints-2.png" />
+<img src="./public/screenshots/demo-mosque-calendar-prints-1.png" />
+<img src="./public/screenshots/demo-mosque-calendar-prints-2.png" />
 
 ### Mobile app
 
