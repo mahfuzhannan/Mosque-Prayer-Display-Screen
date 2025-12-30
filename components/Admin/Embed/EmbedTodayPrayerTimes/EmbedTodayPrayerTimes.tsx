@@ -15,7 +15,7 @@ import { CheckIcon } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 export default function EmbedTodayPrayerTimes({}) {
-  const [format, setFormat] = React.useState<string>("H:mm")
+  const [format, setFormat] = React.useState<string>("h:mm")
   const [sunrise, setSunrise] = React.useState<boolean>(false)
   const [date, setDate] = React.useState<boolean>(false)
   const [hijri, setHijri] = React.useState<boolean>(false)
@@ -79,8 +79,8 @@ export default function EmbedTodayPrayerTimes({}) {
               <SelectContent>
                 <SelectGroup>
                   <SelectLabel>Format</SelectLabel>
-                  <SelectItem value="H:mm">H:mm</SelectItem>
-                  <SelectItem value="H:mm A">H:mm A</SelectItem>
+                  <SelectItem value="h:mm">h:mm</SelectItem>
+                  <SelectItem value="h:mm A">h:mm A</SelectItem>
                   <SelectItem value="HH:mm">HH:mm</SelectItem>
                 </SelectGroup>
               </SelectContent>
