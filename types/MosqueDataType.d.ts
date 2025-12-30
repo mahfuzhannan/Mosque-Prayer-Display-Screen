@@ -6,7 +6,7 @@ export interface MosqueData {
   metadata: MosqueMetadataType
   jummah_times: JummahTimes
   prayer_times: DailyPrayerTime[]
-  configuration?: ConfigurationJson
+  config?: ConfigurationJson
 }
 
 type KeyValueStringType = { [key: string]: string }

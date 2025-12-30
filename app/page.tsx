@@ -42,7 +42,7 @@ export default async function Home() {
   const tomorrow: DailyPrayerTime = await getPrayerTimesForTomorrow()
   const jummahTimes: JummahTimes = await getJummahTimes()
   const mosqueMetadata: MosqueMetadataType = await getMetaData()
-  const configuration: ConfigurationJson = await getConfiguration()
+  const config: ConfigurationJson = await getConfiguration()
   const upcomingPrayerDays: UpcomingPrayerTimes[] =
     await getPrayerTimesForUpcomingDays()
 
@@ -60,8 +60,12 @@ export default async function Home() {
     )
   })
 
+  console.log(
+    `configuration.feature.announcement.enabled: ${config.feature.announcement.enabled}`,
+  )
+
   return (
-    <ConfigurationProvider configuration={configuration}>
+    <ConfigurationProvider config={config}>
       <div className="bg-mosqueBrand min-h-screen min-w-full">
         <main className="md:p-5">
           <div className="md:grid md:grid-cols-8">
@@ -88,7 +92,7 @@ export default async function Home() {
           </div>
           <ServiceWorker />
         </main>
-        {configuration.feature.announcement.enabled && <Announcement />}
+        {config.feature.announcement.enabled && <Announcement />}
         <Blackout prayerTimeToday={today} />
       </div>
     </ConfigurationProvider>

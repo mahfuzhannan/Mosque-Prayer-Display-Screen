@@ -5,19 +5,19 @@ import { ConfigurationJson } from '@/types/ConfigurationType'
 import { configurationDefaults } from '@/config/ConfigurationDefaults'
 
 type ConfigurationProviderProps = {
-  configuration: ConfigurationJson
+  config: ConfigurationJson
   children: React.ReactNode
 }
 
 export const ConfigurationContext = createContext<ConfigurationJson>(configurationDefaults)
 
 export function ConfigurationProvider({
-  configuration,
+  config,
   children,
 }: ConfigurationProviderProps) {
 
   return (
-    <ConfigurationContext.Provider value={configuration}>
+    <ConfigurationContext.Provider value={config}>
       {children}
     </ConfigurationContext.Provider>
   )

@@ -11,6 +11,7 @@ import { AnnouncementData } from '@/types/AnnouncementType'
 import { find } from 'lodash'
 import moment from 'moment'
 import {
+  sheetsGetMosqueData,
   sheetsUpdateAnnouncement,
 } from '@/services/GoogleSheetsService'
 import { CalendarPrintMonthlyPrayerTimes } from '@/types/CalendarPrintType'
@@ -19,17 +20,31 @@ import {
   ConfigurationJson,
 } from '@/types/ConfigurationType'
 import { configurationDefaults } from '@/config/ConfigurationDefaults'
+import { unflattenObject } from "@/lib/unflattenObject"
+import { isSheetsClientEnabled } from "@/services/GoogleSheetsUtil"
 
 
 const MOSQUE_API_ENDPOINT = process.env.MOSQUE_API_ENDPOINT ?? ''
 const DAY_FOR_UPCOMING = parseInt(process.env?.UPCOMING_PRAYER_DAY ?? '3')
+const useSheetsClient = isSheetsClientEnabled()
 
 export async function getMosqueData (): Promise<MosqueData> {
-  const response = await fetch(MOSQUE_API_ENDPOINT, {
-    next: { revalidate: 30 },
-  })
+  if (useSheetsClient) {
+    console.info("Fetching data from sheets client")
+    return await sheetsGetMosqueData()
+  } else {
+    console.info("Fetching data from mosque api endpoint")
+    const response = await fetch(MOSQUE_API_ENDPOINT, {
+      next: { revalidate: 30 },
+    })
 
-  return response.json()
+    const data = await response.json()
+
+    // we do this so that the MosqueData type doesn't is strongly typed
+    data.config = unflattenObject(data.config)
+
+    return data
+  }
 }
 
 export async function getPrayerTimeForDayMonth (
@@ -129,8 +144,10 @@ export async function getMetaData (): Promise<MosqueMetadataType> {
 }
 
 export async function getConfiguration (): Promise<ConfigurationJson> {
-  const { configuration } = await getMosqueData()
-  return deepmerge(configurationDefaults, configuration ?? {})
+  const { config } = await getMosqueData()
+  const mergedConfig = deepmerge(configurationDefaults, config ?? {})
+  console.log(`configuration: ${JSON.stringify(mergedConfig)}`)
+  return mergedConfig
 }
 
 export async function getAnnouncement (): Promise<AnnouncementData | null> {

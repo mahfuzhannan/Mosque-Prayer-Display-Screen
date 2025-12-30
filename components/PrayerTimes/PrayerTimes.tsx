@@ -41,9 +41,9 @@ export default function PrayerTimes({
     },
   ]
 
-  const configuration = useConfiguration()
+  const config = useConfiguration()
   const [nextPrayerTime, setNextPrayerTime] = useState(getNextPrayer(today))
-  const isTomorrowEnabled = configuration.feature.prayer_time_tomorrow.enabled
+  const isTomorrowEnabled = config.feature.prayer_time_tomorrow.enabled
 
   useEffect(() => {
     const interval = setInterval(() => {
