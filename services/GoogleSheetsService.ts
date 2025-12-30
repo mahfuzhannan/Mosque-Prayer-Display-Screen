@@ -152,7 +152,10 @@ export async function sheetsGetConfigurationData(): Promise<ConfigurationJson> {
       spreadsheetId: SPREADSHEET_ID,
       range: SHEET_NAMES.Configuration,
     })
-    return sheetsUtilValuesToNestedJson(deepmerge(configurationDefaults, configurationData?.data?.values ?? [])) as ConfigurationJson
+    return deepmerge(
+      configurationDefaults,
+      sheetsUtilValuesToNestedJson(configurationData?.data?.values ?? []),
+    ) as ConfigurationJson
   } catch (error: any) {
     console.error(error)
     throw new Error(`Google Sheets API request failed: ${error?.message}`)
