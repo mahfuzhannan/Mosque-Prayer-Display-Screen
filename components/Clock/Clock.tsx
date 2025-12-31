@@ -5,15 +5,19 @@ import { useEffect, useState } from "react"
 
 export default function Clock({ darkMode = false }: { darkMode?: boolean }) {
   const format = "h:mm A"
-  const [time, setTime] = useState<string>("") // deterministic on server + first client render
+  const [time, setTime] = useState(getCurrentTimeFormatted())
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setTime(moment().locale("en").format(format))
+      setTime(getCurrentTimeFormatted())
     }, 1000)
 
     return () => clearInterval(interval)
   }, [format])
+
+  function getCurrentTimeFormatted() {
+    return moment().locale("en").format(format)
+  }
 
   return (
     <div
