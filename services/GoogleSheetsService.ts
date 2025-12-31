@@ -15,7 +15,7 @@ import { configurationDefaults } from "@/config/ConfigurationDefaults"
 import { MosqueData, MosqueMetadataType } from "@/types/MosqueDataType"
 import { DailyPrayerTime } from "@/types/DailyPrayerTimeType"
 import { JummahTimes } from "@/types/JummahTimesType"
-import { cacheLife, cacheTag } from "next/cache"
+import { unstable_cache } from "next/cache"
 
 const SPREADSHEET_ID = process.env.SPREADSHEET_ID ?? ''
 const ADMIN_GOOGLE_SA_PRIVATE_KEY = process.env.ADMIN_GOOGLE_SA_PRIVATE_KEY
@@ -70,29 +70,33 @@ export async function isSheetsClientReady(): Promise<boolean> {
 }
 
 export async function sheetsGetMosqueData(): Promise<MosqueData> {
-  "use cache"
-  cacheLife({ revalidate: 30 })
-  cacheTag("configuration")
-  try {
-    const configurationData = await sheetsGetConfigurationData()
-    const prayerTimes = await sheetsGetPrayerData()
-    const jummahTimes = await sheetsGetJummahData()
-    const metaData = await sheetsGetMetadata()
-    return {
-      metadata: metaData,
-      jummah_times: jummahTimes,
-      prayer_times: prayerTimes,
-      config: configurationData
+  const getCachedData = unstable_cache(async () => {
+    try {
+      const configurationData = await sheetsGetConfigurationData()
+      const prayerTimes = await sheetsGetPrayerData()
+      const jummahTimes = await sheetsGetJummahData()
+      const metaData = await sheetsGetMetadata()
+      return {
+        metadata: metaData,
+        jummah_times: jummahTimes,
+        prayer_times: prayerTimes,
+        config: configurationData,
+      }
+    } catch (error: any) {
+      console.error(error)
+      return {
+        metadata: {},
+        jummah_times: [],
+        prayer_times: [],
+        config: configurationDefaults,
+      }
     }
-  } catch (error: any) {
-    console.error(error)
-    return {
-      metadata: {},
-      jummah_times: [],
-      prayer_times: [],
-      config: configurationDefaults,
-    }
-  }
+  }, [], {
+    revalidate: 30
+  })
+
+  return getCachedData()
+
 }
 
 export async function sheetsGetPrayerData(): Promise<DailyPrayerTime[]> {
