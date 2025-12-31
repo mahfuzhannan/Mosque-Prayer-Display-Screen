@@ -11,7 +11,7 @@ export function dtNowLocale(): moment.Moment {
 }
 
 export function dtLocale(date: moment.MomentInput, format?: moment.MomentFormatSpecification, strict?: boolean): moment.Moment {
-  return moment(date, format).locale(LOCALE)
+  return moment(date, format, strict).locale(LOCALE)
 }
 
 export function dtNowLocaleCustomFormat(format: string): string {

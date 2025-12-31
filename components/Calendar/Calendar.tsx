@@ -2,7 +2,7 @@ import { DailyPrayerTime } from "@/types/DailyPrayerTimeType"
 import { MosqueMetadataType } from "@/types/MosqueDataType"
 import React, { Fragment } from "react"
 import Link from 'next/link'
-import { dtNowLocaleCustomFormat, dtTimeToCustomFormat } from "@/lib/datetimeUtils"
+import { dtLocale, dtNowLocaleCustomFormat, dtTimeToCustomFormat } from "@/lib/datetimeUtils"
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ")
@@ -61,6 +61,13 @@ export default function Calendar({
                   >
                     Date
                   </th>
+                  <th
+                    scope="col"
+                    className="sticky top-0 z-10 border-b border-gray-300 bg-white bg-opacity-75 py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter"
+                    key={`header_day`}
+                  >
+                    Day
+                  </th>
 
                   {headers.map((header, i) => (
                     <th
@@ -115,6 +122,12 @@ export default function Calendar({
                     dtTimeToCustomFormat(prayerTime.isha.start, "h:mm a"),
                     dtTimeToCustomFormat(prayerTime.isha.congregation_start, "h:mm a"),
                   ]
+                  const todayDayName = dtLocale(
+                    `${prayerTime.day_of_month} ${prayerTime.month_label}`,
+                  ).format("ddd")
+                  const todayDayNumAndMonth = dtLocale(
+                    `${prayerTime.day_of_month} ${prayerTime.month_label}`,
+                  ).format("D MMMM")
 
                   return (
                     <Fragment
@@ -126,7 +139,7 @@ export default function Calendar({
                           key={`month_${prayerTime.month_label}`}
                         >
                           <th
-                            colSpan={12}
+                            colSpan={13}
                             scope="colgroup"
                             className="bg-mosqueBrand py-2 pl-4 text-left text-sm font-semibold text-white"
                           >
@@ -156,7 +169,22 @@ export default function Calendar({
                           <a
                             href={`#${prayerTime.day_of_month}_${prayerTime.month_label}`}
                           >
-                            {prayerTime.day_of_month} {prayerTime.month_label}
+                            {todayDayNumAndMonth}
+                          </a>
+                        </td>
+                        <td
+                          className={classNames(
+                            prayerTimeIdx !== prayerTimes.length - 1
+                              ? "border-b border-gray-200"
+                              : "",
+                            "whitespace-nowrap pl-4 text-left text-sm font-medium",
+                          )}
+                          key={`prayerTime_${prayerTime.day_of_month}_${prayerTime.month_label}_day`}
+                        >
+                          <a
+                            href={`#${prayerTime.day_of_month}_${prayerTime.month_label}_day`}
+                          >
+                            {todayDayName}
                           </a>
                         </td>
                         {times.map((columnData, i) => (
