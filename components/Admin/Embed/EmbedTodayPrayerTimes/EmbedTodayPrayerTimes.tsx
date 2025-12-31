@@ -45,7 +45,7 @@ export default function EmbedTodayPrayerTimes({}) {
   }
 
   function copyUrlToClipboard() {
-    window.navigator.clipboard.writeText(widgetUrl)
+    window.navigator.clipboard.writeText(widgetIFrameScriptStr)
     setHasCopiedToClipboard(true)
     setTimeout(() => {
       setHasCopiedToClipboard(false)
