@@ -1,11 +1,14 @@
 import { DailyPrayerTime } from "@/types/DailyPrayerTimeType"
 import "../../widget.css"
 import { getNextPrayer } from "@/services/PrayerTimeService"
-import { getPrayerTimesForToday } from "@/services/MosqueDataService"
+import {
+  getPrayerTimesForToday,
+  getPrayerTimesForTomorrow,
+} from "@/services/MosqueDataService"
 import { cn } from "@/lib/utils"
 import {
   dtNowFormatFull,
-  dtNowHijriFormatFull,
+  dtNowHijriFormatFull, dtNowLocale,
   dtTimeToCustomFormat,
 } from "@/lib/datetimeUtils"
 
@@ -26,11 +29,23 @@ export async function TodayPrayerTime({
     dtTimeToCustomFormat(time, timeFormat)
 
   const today: DailyPrayerTime = await getPrayerTimesForToday()
-  const englishDate = dtNowFormatFull()
-  const hijriDate = dtNowHijriFormatFull()
+  const tomorrow: DailyPrayerTime = await getPrayerTimesForTomorrow()
+  let currentDailyPrayerTimes = today
+  let englishDate = dtNowFormatFull()
+  let hijriDate = dtNowHijriFormatFull()
 
-  const nextPrayerTime = getNextPrayer(today)
-  let todaySalahTimes: Array<{
+  let nextPrayerTime = getNextPrayer(today)
+  if (!nextPrayerTime.today) {
+    nextPrayerTime = {
+      today: true,
+      prayerIndex: 0
+    }
+    currentDailyPrayerTimes = tomorrow
+    englishDate = dtNowLocale().add(1, "day").format("D MMMM YYYY")
+    hijriDate = dtNowLocale().add(1, "day").format("iD iMMMM iYYYY")
+  }
+
+  let currentSalahTimes: Array<{
     label: string
     start: string
     congregation: string | null
@@ -38,46 +53,46 @@ export async function TodayPrayerTime({
   }> = [
     {
       label: "Fajr",
-      start: today.fajr.start,
-      congregation: today.fajr.congregation_start,
+      start: currentDailyPrayerTimes.fajr.start,
+      congregation: currentDailyPrayerTimes.fajr.congregation_start,
       prayerIndex: 0,
     },
     {
       label: "Zuhr",
-      start: today.zuhr.start,
-      congregation: today.zuhr.congregation_start,
+      start: currentDailyPrayerTimes.zuhr.start,
+      congregation: currentDailyPrayerTimes.zuhr.congregation_start,
       prayerIndex: 1,
     },
     {
       label: "Asr",
-      start: today.asr.start,
-      congregation: today.asr.congregation_start,
+      start: currentDailyPrayerTimes.asr.start,
+      congregation: currentDailyPrayerTimes.asr.congregation_start,
       prayerIndex: 2,
     },
     {
       label: "Maghrib",
-      start: today.maghrib.start,
-      congregation: today.maghrib.congregation_start,
+      start: currentDailyPrayerTimes.maghrib.start,
+      congregation: currentDailyPrayerTimes.maghrib.congregation_start,
       prayerIndex: 3,
     },
     {
       label: "Isha",
-      start: today.isha.start,
-      congregation: today.isha.congregation_start,
+      start: currentDailyPrayerTimes.isha.start,
+      congregation: currentDailyPrayerTimes.isha.congregation_start,
       prayerIndex: 4,
     },
   ]
 
   if (showSunrise) {
-    todaySalahTimes = [
-      ...todaySalahTimes.slice(0, 1),
+    currentSalahTimes = [
+      ...currentSalahTimes.slice(0, 1),
       {
         label: "Sunrise",
-        start: today.sunrise_start,
+        start: currentDailyPrayerTimes.sunrise_start,
         congregation: null,
         prayerIndex: -1,
       },
-      ...todaySalahTimes.slice(1),
+      ...currentSalahTimes.slice(1),
     ]
   }
 
@@ -89,7 +104,7 @@ export async function TodayPrayerTime({
             <tr>
               <th className={"pr-6 text-right text-gray-300"}></th>
               <th
-                colSpan={todaySalahTimes?.length}
+                colSpan={currentSalahTimes?.length}
                 className={"text-gray-400 font-normal text-center text-md"}
               >
                 {[showDate && englishDate, showHijri && hijriDate]
@@ -100,7 +115,7 @@ export async function TodayPrayerTime({
           )}
           <tr>
             <th />
-            {todaySalahTimes.map((value, index) => (
+            {currentSalahTimes.map((value, index) => (
               <th
                 key={index}
                 className={cn(
@@ -118,8 +133,10 @@ export async function TodayPrayerTime({
         </thead>
         <tbody>
           <tr>
-            <th className={"text-right text-gray-400 font-normal"}>Begins</th>
-            {todaySalahTimes.map((value, index) => (
+            <th className={"text-right text-gray-400 font-medium pr-2"}>
+              Begins
+            </th>
+            {currentSalahTimes.map((value, index) => (
               <td
                 key={index}
                 className={cn(
@@ -135,11 +152,11 @@ export async function TodayPrayerTime({
             ))}
           </tr>
           <tr>
-            <th className={"text-right text-gray-400 font-normal"}>
+            <th className={"text-right text-gray-400 font-medium pr-2"}>
               Jama&apos;ah
             </th>
 
-            {todaySalahTimes.map((value, index) => (
+            {currentSalahTimes.map((value, index) => (
               <td
                 key={index}
                 className={cn(
