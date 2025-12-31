@@ -47,3 +47,9 @@ export function dtTimeToCustomFormat(time?: string, format?: string): string {
   }
   return moment(time, ["HH:mm", "h:mm", "h:mm A"]).locale(LOCALE).format(format)
 }
+
+export function dtMonthNumToFullMonth(monthNum: string) {
+  return dtNowLocale()
+    .month(parseInt(monthNum, 10) - 1)
+    .format("MMMM")
+}

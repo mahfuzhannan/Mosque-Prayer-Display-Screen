@@ -1,4 +1,5 @@
 import { DailyPrayerTime } from '@/types/DailyPrayerTimeType'
+import { dtMonthNumToFullMonth } from "@/lib/datetimeUtils"
 
 const ADMIN_GOOGLE_SA_PRIVATE_KEY = process.env.ADMIN_GOOGLE_SA_PRIVATE_KEY
 const ADMIN_GOOGLE_SA_EMAIL = process.env.ADMIN_GOOGLE_SA_EMAIL
@@ -127,10 +128,12 @@ export function prayerTimeValuesToPrayerTimesJsonSchema (values: any[][] | null 
 
       // Normal top-level keys (month, day_of_month, sunrise_start, etc.)
       if (header === 'month' ||
-        header === 'month_label' ||
         header === 'day_of_month' ||
         header === 'sunrise_start') {
         obj[header] = value
+        if (header === 'month') {
+          obj["month_label"] = dtMonthNumToFullMonth(value)
+        }
         return
       }
 
