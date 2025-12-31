@@ -1,10 +1,11 @@
 "use client"
 
-import moment from "moment"
 import { useEffect, useState } from "react"
+import {
+  dtNowLocaleFormatTime12HourWithTimePeriod,
+} from "@/lib/datetimeUtils"
 
 export default function Clock({ darkMode = false }: { darkMode?: boolean }) {
-  const format = "h:mm A"
   const [time, setTime] = useState(getCurrentTimeFormatted())
 
   useEffect(() => {
@@ -13,10 +14,10 @@ export default function Clock({ darkMode = false }: { darkMode?: boolean }) {
     }, 1000)
 
     return () => clearInterval(interval)
-  }, [format])
+  }, [])
 
   function getCurrentTimeFormatted() {
-    return moment().locale("en").format(format)
+    return dtNowLocaleFormatTime12HourWithTimePeriod()
   }
 
   return (

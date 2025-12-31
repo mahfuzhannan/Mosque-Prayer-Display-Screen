@@ -1,10 +1,10 @@
 "use client"
 
-import moment from "moment-hijri"
+import { dtNowLocaleCustomFormat } from "@/lib/datetimeUtils"
 
 export default function Date() {
-  const englishDate = moment().locale("en").format("dddd D MMMM YYYY")
-  const hijriDate = moment().locale("en").format("iD iMMMM iYYYY")
+  const englishDate = dtNowLocaleCustomFormat("dddd D MMMM YYYY")
+  const hijriDate = dtNowLocaleCustomFormat("iD iMMMM iYYYY")
 
   return (
     <div className="text-mosqueBrand-onPrimary text-center md:text-left">

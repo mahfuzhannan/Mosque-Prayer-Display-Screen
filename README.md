@@ -49,6 +49,7 @@ All of the code sits here:
 <img src="./public/screenshots/demo-mosque-view-2.png" />
 
 ### Hide Tomorrow Prayer Time
+
 <img src="./public/screenshots/demo-mosque-view-3.png" />
 
 ### Announcements
@@ -201,6 +202,7 @@ If you want to update your domain, you can do so by following the Vercel documen
 | THEME_COLOR_ON_PRIMARY      | #FFFFFF                                                                          | #FFFFFF                         | The text color to be used when the background color is primary                  |
 | THEME_COLOR_ON_PRIMARY_ALT  | #FFFFFF                                                                          | #FFFFFF                         | The text color to be used when the background color is primary alternative      |
 | THEME_COLOR_HIGHLIGHT       | #10b981                                                                          | #10b981                         | The color used to highlight upcoming prayer                                     |
+| LOCALE                      | en                                                                               | en                              | The date/time format for locale                                                 |
 | ADMIN_GOOGLE_SA_PRIVATE_KEY | "-----BEGIN PRIVATE KEY-----\n******\n-----END PRIVATE KEY-----\n"               |                                 | Required as part of Admin interface to interact with your google sheets         |
 | ADMIN_GOOGLE_SA_EMAIL       | XXXX@XXXX-XXXX.iam.gserviceaccount.com                                           |                                 | Required as part of Admin interface to interact with your google sheets         |
 | AUTH_USERNAME               | myuser                                                                           | myuser                          | Required as part of Admin interface to login to admin page                      |

@@ -2,7 +2,7 @@ import React from "react"
 import { cn } from "@/lib/utils";
 import { CalendarDailyPrayerTime, CalendarPrintComponentProps, CalendarPrintMonthlyPrayerTimes } from "@/types/CalendarPrintType";
 import { MosqueMetadataType } from "@/types/MosqueDataType";
-import moment from "moment-hijri"
+import { dtLocale } from "@/lib/datetimeUtils"
 
 export default function ClassicTableA4({ year, monthly_prayer_times, metadata }: CalendarPrintComponentProps) {
 
@@ -44,8 +44,8 @@ function CalendarTable({ monthly_prayer_times}: { monthly_prayer_times: Calendar
     )
   }
 
-  const englishDate = moment(monthly_prayer_times.prayer_times[0].date)
-  const hijriDate = moment(monthly_prayer_times.prayer_times[0].date).locale("en")
+  const englishDate = dtLocale(monthly_prayer_times.prayer_times[0].date)
+  const hijriDate = dtLocale(monthly_prayer_times.prayer_times[0].date)
 
   const monthFormatted = englishDate.format("MMM")
   const hijriMonthFormatted = hijriDate.format("iMMM")
@@ -92,7 +92,7 @@ function CalendarTable({ monthly_prayer_times}: { monthly_prayer_times: Calendar
 
 function CalendarRow({ prayer_time }: { prayer_time: CalendarDailyPrayerTime }) {
   // Build the base Gregorian date
-  let englishDate = moment(prayer_time.date);
+  let englishDate = dtLocale(prayer_time.date)
 
   const hijriDate = englishDate.clone().locale("en");
 
@@ -138,7 +138,7 @@ function CalendarHeader({ metadata, year, monthly_prayer_times }: { metadata: Mo
   }
 
   // Start of Gregorian month
-  const start = moment(monthly_prayer_times.prayer_times[0].date).locale("en")
+  const start = dtLocale(monthly_prayer_times.prayer_times[0].date).locale("en")
   // End of Gregorian month (28 or 29 Feb as appropriate)
   const end = start.clone().endOf("month").locale("en")
 

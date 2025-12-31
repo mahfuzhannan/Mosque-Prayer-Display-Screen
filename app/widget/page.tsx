@@ -1,13 +1,15 @@
 import { getPrayerTimesForToday } from "@/services/MosqueDataService"
 import { DailyPrayerTime } from "@/types/DailyPrayerTimeType"
 import "./widget.css"
-import moment from "moment"
+import {
+  dtTimeToCustomFormat,
+} from "@/lib/datetimeUtils"
 
 export default async function Widget() {
   const today: DailyPrayerTime = await getPrayerTimesForToday()
 
   const convertTime = (time: string) => {
-    return moment(time, ["HH:mm"]).format("h:mm")
+    return dtTimeToCustomFormat(time, "h:mm")
   }
 
   return (

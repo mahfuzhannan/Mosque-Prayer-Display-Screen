@@ -2,7 +2,6 @@
 
 import { AnnouncementData } from '@/types/AnnouncementType'
 import { google, sheets_v4 } from "googleapis"
-import moment from 'moment'
 import {
   prayerTimeValuesToPrayerTimesJsonSchema,
   sheetsUtilFlattenedJsonToRows,
@@ -16,6 +15,7 @@ import { MosqueData, MosqueMetadataType } from "@/types/MosqueDataType"
 import { DailyPrayerTime } from "@/types/DailyPrayerTimeType"
 import { JummahTimes } from "@/types/JummahTimesType"
 import { unstable_cache } from "next/cache"
+import { dtNowLocale } from "@/lib/datetimeUtils"
 
 const SPREADSHEET_ID = process.env.SPREADSHEET_ID ?? ''
 const ADMIN_GOOGLE_SA_PRIVATE_KEY = process.env.ADMIN_GOOGLE_SA_PRIVATE_KEY
@@ -168,7 +168,7 @@ export async function sheetsGetAnnouncement(): Promise<AnnouncementData | null> 
   const data = await sheetsGetConfigurationData()
   let announcement = data?.announcement as unknown as AnnouncementData ?? null
 
-  const now = moment()
+  const now = dtNowLocale()
   announcement.is_visible = (
     now.isSame(announcement?.date, 'day')
     && now.isSameOrAfter(`${announcement?.date} ${announcement?.start_time}`, 'minutes')

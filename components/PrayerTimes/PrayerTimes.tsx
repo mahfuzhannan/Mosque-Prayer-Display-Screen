@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react"
 import { getNextPrayer } from "@/services/PrayerTimeService"
 import { DailyPrayerTime } from "@/types/DailyPrayerTimeType"
-import moment from "moment"
 import { useConfiguration } from "@/hooks/useConfiguration"
+import { dtTimeToCustomFormat } from "@/lib/datetimeUtils"
 
 export default function PrayerTimes({
   today,
@@ -86,12 +86,10 @@ export default function PrayerTimes({
               {prayer.label}
             </th>
             <td className="text-xl md:text-6xl">
-              {moment(prayer.data.start, ["HH:mm"]).locale("en").format("h:mm")}
+              {dtTimeToCustomFormat(prayer.data.start, "h:mm")}
               {prayer.data?.start_secondary ? (
                 <div className="block mt-1 md:mt-2">
-                  {moment(prayer.data.start_secondary, ["HH:mm"]).format(
-                    "h:mm",
-                  )}
+                  {dtTimeToCustomFormat(prayer.data.start_secondary, "h:mm")}
                 </div>
               ) : null}
             </td>
@@ -104,9 +102,7 @@ export default function PrayerTimes({
                     : ""
                 }
               >
-                {moment(prayer.data.congregation_start, ["HH:mm"])
-                  .locale("en")
-                  .format("h:mm")}
+                {dtTimeToCustomFormat(prayer.data.congregation_start, "h:mm")}
               </span>
             </td>
             {isTomorrowEnabled && (
@@ -119,9 +115,7 @@ export default function PrayerTimes({
                       : ""
                   }
                 >
-                  {moment(prayer.tomorrow.congregation_start, ["HH:mm"])
-                    .locale("en")
-                    .format("h:mm")}
+                  {dtTimeToCustomFormat(prayer.tomorrow.congregation_start, "h:mm")}
                 </span>
               </td>
             )}

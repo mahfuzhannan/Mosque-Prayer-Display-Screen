@@ -1,8 +1,8 @@
 import { DailyPrayerTime } from "@/types/DailyPrayerTimeType"
 import { MosqueMetadataType } from "@/types/MosqueDataType"
-import moment from "moment"
 import React, { Fragment } from "react"
 import Link from 'next/link'
+import { dtNowLocaleCustomFormat, dtTimeToCustomFormat } from "@/lib/datetimeUtils"
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ")
@@ -15,7 +15,7 @@ export default function Calendar({
   prayerTimes: DailyPrayerTime[]
   metadata: MosqueMetadataType
 }) {
-  const today = moment().format("D MMMM")
+  const today = dtNowLocaleCustomFormat("D MMMM")
   const headers = [
     "Fajr Starts",
     "Fajr Jama'ah",
@@ -76,47 +76,44 @@ export default function Calendar({
               <tbody>
                 {prayerTimes.map((prayerTime, prayerTimeIdx) => {
                   const times = [
-                    moment(prayerTime.fajr.start, ["HH:mm"]).format("h:mm a"),
-                    moment(prayerTime.fajr.congregation_start, [
-                      "HH:mm",
-                    ]).format("h:mm a"),
-
-                    moment(prayerTime.sunrise_start, ["HH:mm"]).format(
+                    dtTimeToCustomFormat(prayerTime.fajr.start, "h:mm a"),
+                    dtTimeToCustomFormat(
+                      prayerTime.fajr.congregation_start,
                       "h:mm a",
                     ),
 
-                    moment(prayerTime.zuhr.start, ["HH:mm"]).format("h:mm a"),
-                    moment(prayerTime.zuhr.congregation_start, [
-                      "HH:mm",
-                    ]).format("h:mm a"),
+                    dtTimeToCustomFormat(prayerTime.sunrise_start, "h:mm a"),
+
+                    dtTimeToCustomFormat(prayerTime.zuhr.start, "h:mm a"),
+                    dtTimeToCustomFormat(
+                      prayerTime.zuhr.congregation_start,
+                      "h:mm a",
+                    ),
 
                     <>
                       <p>
-                        {moment(prayerTime.asr.start, ["HH:mm"]).format(
+                        {dtTimeToCustomFormat(prayerTime.asr.start, "h:mm a")}
+                      </p>
+                      <p>
+                        {dtTimeToCustomFormat(
+                          prayerTime.asr.start_secondary,
                           "h:mm a",
                         )}
                       </p>
-                      <p>
-                        {moment(prayerTime.asr.start_secondary, [
-                          "HH:mm",
-                        ]).format("h:mm a")}
-                      </p>
                     </>,
-                    moment(prayerTime.asr.congregation_start, ["HH:mm"]).format(
+                    dtTimeToCustomFormat(
+                      prayerTime.asr.congregation_start,
                       "h:mm a",
                     ),
 
-                    moment(prayerTime.maghrib.start, ["HH:mm"]).format(
+                    dtTimeToCustomFormat(prayerTime.maghrib.start, "h:mm a"),
+                    dtTimeToCustomFormat(
+                      prayerTime.maghrib.congregation_start,
                       "h:mm a",
                     ),
-                    moment(prayerTime.maghrib.congregation_start, [
-                      "HH:mm",
-                    ]).format("h:mm a"),
 
-                    moment(prayerTime.isha.start, ["HH:mm"]).format("h:mm a"),
-                    moment(prayerTime.isha.congregation_start, [
-                      "HH:mm",
-                    ]).format("h:mm a"),
+                    dtTimeToCustomFormat(prayerTime.isha.start, "h:mm a"),
+                    dtTimeToCustomFormat(prayerTime.isha.congregation_start, "h:mm a"),
                   ]
 
                   return (

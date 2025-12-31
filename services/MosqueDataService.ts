@@ -9,7 +9,6 @@ import {
 } from '@/types/MosqueDataType'
 import { AnnouncementData } from '@/types/AnnouncementType'
 import { find } from 'lodash'
-import moment from 'moment'
 import {
   sheetsGetMosqueData,
   sheetsUpdateAnnouncement,
@@ -22,6 +21,7 @@ import {
 import { configurationDefaults } from '@/config/ConfigurationDefaults'
 import { unflattenObject } from "@/lib/unflattenObject"
 import { isSheetsClientEnabled } from "@/services/GoogleSheetsUtil"
+import { dtLocale, dtNowLocale } from "@/lib/datetimeUtils"
 
 
 const MOSQUE_API_ENDPOINT = process.env.MOSQUE_API_ENDPOINT ?? ''
@@ -60,13 +60,13 @@ export async function getPrayerTimeForDayMonth (
 }
 
 export async function getPrayerTimesForToday (): Promise<DailyPrayerTime> {
-  const date = moment()
+  const date = dtNowLocale()
 
   return getPrayerTimeForDayMonth(date.format('D'), date.format('M'))
 }
 
 export async function getPrayerTimesForTomorrow (): Promise<DailyPrayerTime> {
-  const date = moment().add(1, 'day')
+  const date = dtNowLocale().add(1, "day")
 
   return getPrayerTimeForDayMonth(date.format('D'), date.format('M'))
 }
@@ -79,11 +79,11 @@ export async function getPrayerTimesForUpcomingDays (
   for (let index = 1; index <= days; index++) {
     let times: UpcomingPrayerTimes = {
       ...(await getPrayerTimeForDayMonth(
-        moment().add(index, 'day').format('D'),
-        moment().add(index, 'day').format('M'),
+        dtNowLocale().add(index, "day").format("D"),
+        dtNowLocale().add(index, "day").format("M"),
       )),
-      display_date: moment().add(index, 'day').format('ddd D MMM'),
-      display_day_label: moment().add(index, 'day').format('ddd'),
+      display_date: dtNowLocale().add(index, "day").format("ddd D MMM"),
+      display_day_label: dtNowLocale().add(index, "day").format("ddd"),
     }
 
     data.push(times)
@@ -106,9 +106,11 @@ export async function getCalendarPrintMonthlyPrayerTimesForYear (year: string): 
     }
 
     // We want to validate the date as we are generating the calendar, this will avoid leap year issues and other date validation issues
-    const date = moment(
-      `${year}-${prayer_time.month}-${prayer_time.day_of_month}`, 'YYYY-M-D',
-      true)
+    const date = dtLocale(
+      `${year}-${prayer_time.month}-${prayer_time.day_of_month}`,
+      "YYYY-M-D",
+      true,
+    )
 
     if (!date.isValid()) {
       continue
@@ -155,7 +157,7 @@ export async function getAnnouncement (): Promise<AnnouncementData | null> {
     return null
   }
 
-  const now = moment()
+  const now = dtNowLocale()
 
   announcement.is_visible = (
     now.isSame(announcement?.date, 'day')

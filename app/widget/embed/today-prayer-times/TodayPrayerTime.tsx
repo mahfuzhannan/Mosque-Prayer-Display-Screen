@@ -1,9 +1,13 @@
-import moment from "moment-hijri"
 import { DailyPrayerTime } from "@/types/DailyPrayerTimeType"
 import "../../widget.css"
 import { getNextPrayer } from "@/services/PrayerTimeService"
 import { getPrayerTimesForToday } from "@/services/MosqueDataService"
 import { cn } from "@/lib/utils"
+import {
+  dtNowFormatFull,
+  dtNowHijriFormatFull,
+  dtTimeToCustomFormat,
+} from "@/lib/datetimeUtils"
 
 type Props = {
   timeFormat?: "h:mm" | "h:mm A" | "HH:mm"
@@ -19,11 +23,11 @@ export async function TodayPrayerTime({
   showHijri = false,
 }: Props) {
   const convertTime = (time: string) =>
-    moment(time, ["HH:mm"]).locale("en").format(timeFormat)
+    dtTimeToCustomFormat(time, timeFormat)
 
   const today: DailyPrayerTime = await getPrayerTimesForToday()
-  const englishDate = moment().format("D MMMM YYYY")
-  const hijriDate = moment().locale("en").format("iD iMMMM iYYYY")
+  const englishDate = dtNowFormatFull()
+  const hijriDate = dtNowHijriFormatFull()
 
   const nextPrayerTime = getNextPrayer(today)
   let todaySalahTimes: Array<{

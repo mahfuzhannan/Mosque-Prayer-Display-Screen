@@ -2,9 +2,9 @@
 
 import React, { useState, useEffect } from 'react'
 import { AnnouncementData } from '@/types/AnnouncementType'
-import moment from 'moment'
 import { createAnnouncement } from '@/services/MosqueDataService'
 import { Spinner } from "@/components/ui/spinner"
+import { dtLocale, dtNowLocale } from "@/lib/datetimeUtils"
 
 interface AnnouncementFormProps {
   onComplete: (announcement: AnnouncementData) => void;
@@ -25,7 +25,7 @@ export function AnnouncementForm ({
   // Set default date = today
   // Default start_time = 2 min from now
   useEffect(() => {
-    const now = moment()
+    const now = dtNowLocale()
 
     // Date YYYY-MM-DD
     setDate(now.format('YYYY-MM-DD'))
@@ -38,7 +38,7 @@ export function AnnouncementForm ({
     const announcement: AnnouncementData = {
       date,
       start_time: startTime,
-      end_time: moment(`${date} ${startTime}`).
+      end_time: dtLocale(`${date} ${startTime}`).
         add(duration, 'minutes').
         format('HH:mm'),
       message,
