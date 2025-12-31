@@ -49,7 +49,7 @@ export async function TodayPrayerTime({
       prayerIndex: 1,
     },
     {
-      label: "'Asr",
+      label: "Asr",
       start: today.asr.start,
       congregation: today.asr.congregation_start,
       prayerIndex: 2,
