@@ -1,6 +1,9 @@
-import { DateTime } from "luxon"
+import { DateTime, Settings } from "luxon"
 
 const LOCALE = process.env.LOCALE || "en"
+
+Settings.defaultLocale = LOCALE
+
 
 export function dtNow(): DateTime {
   return DateTime.now()
@@ -11,16 +14,20 @@ export function dtNowLocale(): DateTime {
 }
 
 export function dtLocale(
-  date: string | Date,
+  date: string | Date | DateTime,
   format?: string,
 ): DateTime {
+  if (date instanceof DateTime) {
+    return date
+  }
   if (date instanceof Date) {
     return DateTime.fromJSDate(date)
   }
+  let sanitisedDateInput = date.trim()
   if (format) {
-    return DateTime.fromFormat(date, format)
+    return DateTime.fromFormat(sanitisedDateInput, format)
   }
-  return DateTime.fromISO(date)
+  return DateTime.fromISO(sanitisedDateInput)
 }
 
 export function dtNowLocaleCustomFormat(format: string): string {
@@ -64,63 +71,63 @@ export function dtFormatDayNumber(time?: string | DateTime): string {
   if (!time) {
     return ""
   }
-  return getDateTimeFromAny(time).toFormat("d")
+  return dtLocale(time).toFormat("d")
 }
 
 export function dtFormatDayShort(time?: string | DateTime): string {
   if (!time) {
     return ""
   }
-  return getDateTimeFromAny(time).toFormat("ccc")
+  return dtLocale(time).toFormat("ccc")
 }
 
 export function dtFormatDayLong(time?: string | DateTime): string {
   if (!time) {
     return ""
   }
-  return getDateTimeFromAny(time).toFormat("cccd")
+  return dtLocale(time).toFormat("cccd")
 }
 
 export function dtFormatMonthNumber(time?: string | DateTime): string {
   if (!time) {
     return ""
   }
-  return getDateTimeFromAny(time).toFormat("M")
+  return dtLocale(time).toFormat("M")
 }
 
 export function dtFormatMonthShort(time?: string | DateTime): string {
   if (!time) {
     return ""
   }
-  return getDateTimeFromAny(time).toFormat("LLL")
+  return dtLocale(time).toFormat("LLL")
 }
 
 export function dtFormatMonthLong(time?: string | DateTime): string {
   if (!time) {
     return ""
   }
-  return getDateTimeFromAny(time).toFormat("LLLL")
+  return dtLocale(time).toFormat("LLLL")
 }
 
 export function dtFormatDayDateShort(time?: string | DateTime): string {
   if (!time) {
     return ""
   }
-  return getDateTimeFromAny(time).toFormat("ccc d MMM")
+  return dtLocale(time).toFormat("ccc d MMM")
 }
 
 export function dtFormatDateMonthLong(time?: string | DateTime): string {
   if (!time) {
     return ""
   }
-  return getDateTimeFromAny(time).toFormat("d LLLL")
+  return dtLocale(time).toFormat("d LLLL")
 }
 
 export function dtFormatDateMonthYearLong(time?: string | DateTime): string {
   if (!time) {
     return ""
   }
-  return getDateTimeFromAny(time).toFormat("d LLLL yyyy")
+  return dtLocale(time).toFormat("d LLLL yyyy")
 }
 
 export function dtMonthNumToFullMonth(monthNum: string) {
@@ -136,7 +143,7 @@ export function dtHijriNow(): DateTime {
 }
 
 export function dtHijri(date: string | DateTime): DateTime {
-  return getDateTimeFromAny(date).reconfigure({
+  return dtLocale(date).reconfigure({
     outputCalendar: "islamic-umalqura",
   })
 }
@@ -187,14 +194,4 @@ export function dtHijriFormatDateMonthYearLong(time?: string | DateTime): string
     return ""
   }
   return dtHijri(time).toFormat("d LLLL yyyy")
-}
-
-// Helper funcs
-
-function getDateTimeFromAny(date: string | DateTime) {
-  if (date instanceof DateTime) {
-    return date
-  }
-
-  return dtLocale(date)
 }
