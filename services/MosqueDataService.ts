@@ -21,7 +21,9 @@ import {
 import { configurationDefaults } from '@/config/ConfigurationDefaults'
 import { unflattenObject } from "@/lib/unflattenObject"
 import { isSheetsClientEnabled } from "@/services/GoogleSheetsUtil"
-import { dtLocale, dtNowLocale } from "@/lib/datetimeUtils"
+import {
+  dtFormatDayDateShort, dtFormatDayNumber,
+  dtFormatDayShort, dtFormatMonthNumber, dtLocale, dtNowLocale } from "@/lib/datetimeUtils"
 
 
 const MOSQUE_API_ENDPOINT = process.env.MOSQUE_API_ENDPOINT ?? ''
@@ -62,13 +64,19 @@ export async function getPrayerTimeForDayMonth (
 export async function getPrayerTimesForToday (): Promise<DailyPrayerTime> {
   const date = dtNowLocale()
 
-  return getPrayerTimeForDayMonth(date.format('D'), date.format('M'))
+  return getPrayerTimeForDayMonth(
+    dtFormatDayNumber(date),
+    dtFormatMonthNumber(date)
+  )
 }
 
 export async function getPrayerTimesForTomorrow (): Promise<DailyPrayerTime> {
-  const date = dtNowLocale().add(1, "day")
+  const date = dtNowLocale().plus({days: 1})
 
-  return getPrayerTimeForDayMonth(date.format('D'), date.format('M'))
+  return getPrayerTimeForDayMonth(
+    dtFormatDayNumber(date),
+    date.toFormat("M"),
+  )
 }
 
 export async function getPrayerTimesForUpcomingDays (
@@ -79,11 +87,12 @@ export async function getPrayerTimesForUpcomingDays (
   for (let index = 1; index <= days; index++) {
     let times: UpcomingPrayerTimes = {
       ...(await getPrayerTimeForDayMonth(
-        dtNowLocale().add(index, "day").format("D"),
-        dtNowLocale().add(index, "day").format("M"),
+        dtFormatDayNumber(dtNowLocale().plus({ days: index })),
+        dtFormatMonthNumber(dtNowLocale().plus({ days: index })),
       )),
-      display_date: dtNowLocale().add(index, "day").format("ddd D MMM"),
-      display_day_label: dtNowLocale().add(index, "day").format("ddd"),
+      display_date: dtFormatDayDateShort(dtNowLocale()
+        .plus({ days: index })),
+      display_day_label: dtFormatDayShort(dtNowLocale().plus({ days: index })),
     }
 
     data.push(times)
@@ -108,17 +117,17 @@ export async function getCalendarPrintMonthlyPrayerTimesForYear (year: string): 
     // We want to validate the date as we are generating the calendar, this will avoid leap year issues and other date validation issues
     const date = dtLocale(
       `${year}-${prayer_time.month}-${prayer_time.day_of_month}`,
-      "YYYY-M-D",
-      true,
+      "yyyy-M-d",
     )
 
-    if (!date.isValid()) {
+    if (!date.isValid) {
+      console.log(`Date is not valid: ${date}`)
       continue
     }
 
     map.get(prayer_time.month)!.prayer_times.push({
       ...prayer_time,
-      date: date.toDate(),
+      date: date.toJSDate(),
     })
   }
 
@@ -158,15 +167,16 @@ export async function getAnnouncement (): Promise<AnnouncementData | null> {
   }
 
   const now = dtNowLocale()
-
-  announcement.is_visible = (
-    now.isSame(announcement?.date, 'day')
-    && now.isSameOrAfter(`${announcement?.date} ${announcement?.start_time}`,
-      'minutes')
-    &&
-    now.isBefore(`${announcement?.date} ${announcement?.end_time}`, 'minutes')
+  const announcementDateStart = dtLocale(
+    `${announcement?.date} ${announcement?.start_time}`,
   )
-
+  const announcementDateEnd = dtLocale(
+    `${announcement?.date} ${announcement?.end_time}`,
+  )
+  announcement.is_visible =
+    now.hasSame(announcementDateStart, "day") &&
+    now >= announcementDateStart &&
+    now < announcementDateEnd
   return announcement
 }
 

@@ -15,7 +15,7 @@ import { MosqueData, MosqueMetadataType } from "@/types/MosqueDataType"
 import { DailyPrayerTime } from "@/types/DailyPrayerTimeType"
 import { JummahTimes } from "@/types/JummahTimesType"
 import { unstable_cache } from "next/cache"
-import { dtNowLocale } from "@/lib/datetimeUtils"
+import { dtLocale, dtNowLocale } from "@/lib/datetimeUtils"
 
 const SPREADSHEET_ID = process.env.SPREADSHEET_ID ?? ""
 const ADMIN_GOOGLE_SA_PRIVATE_KEY = process.env.ADMIN_GOOGLE_SA_PRIVATE_KEY
@@ -52,19 +52,6 @@ export async function getUserSheetsClient() {
     return sheetsClient
   } catch (err: any) {
     throw new Error(`Google Service Account error: ${err.message}`)
-  }
-}
-
-export async function isSheetsClientReady(): Promise<boolean> {
-  try {
-    const sheets = await getUserSheetsClient()
-    await sheets.spreadsheets.get({
-      spreadsheetId: SPREADSHEET_ID,
-    })
-    return true
-  } catch (error: any) {
-    console.error(error)
-    return false
   }
 }
 
@@ -193,13 +180,12 @@ export async function sheetsGetAnnouncement(): Promise<AnnouncementData | null> 
   let announcement = (data?.announcement as unknown as AnnouncementData) ?? null
 
   const now = dtNowLocale()
+  const announcementDateStart = dtLocale(`${announcement?.date} ${announcement?.start_time}`)
+  const announcementDateEnd = dtLocale(`${announcement?.date} ${announcement?.end_time}`)
   announcement.is_visible =
-    now.isSame(announcement?.date, "day") &&
-    now.isSameOrAfter(
-      `${announcement?.date} ${announcement?.start_time}`,
-      "minutes",
-    ) &&
-    now.isBefore(`${announcement?.date} ${announcement?.end_time}`, "minutes")
+    now.hasSame(announcementDateStart, "day") &&
+    now >= announcementDateStart &&
+    now < announcementDateEnd
   return announcement
 }
 

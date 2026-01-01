@@ -8,12 +8,13 @@ import {
 import { cn } from "@/lib/utils"
 import {
   dtNowFormatFull,
-  dtNowHijriFormatFull, dtNowLocale,
-  dtTimeToCustomFormat,
+  dtHijriNowFormatFull, dtNowLocale,
+  dtTimeToCustomFormat, dtFormatDateMonthYearLong,
+  dtHijriFormatDateMonthYearLong,
 } from "@/lib/datetimeUtils"
 
 type Props = {
-  timeFormat?: "h:mm" | "h:mm A" | "HH:mm"
+  timeFormat?: "h:mm" | "h:mm a" | "HH:mm"
   showSunrise?: boolean
   showDate?: boolean
   showHijri?: boolean
@@ -32,7 +33,7 @@ export async function TodayPrayerTime({
   const tomorrow: DailyPrayerTime = await getPrayerTimesForTomorrow()
   let currentDailyPrayerTimes = today
   let englishDate = dtNowFormatFull()
-  let hijriDate = dtNowHijriFormatFull()
+  let hijriDate = dtHijriNowFormatFull()
 
   let nextPrayerTime = getNextPrayer(today)
   if (!nextPrayerTime.today) {
@@ -41,8 +42,10 @@ export async function TodayPrayerTime({
       prayerIndex: 0
     }
     currentDailyPrayerTimes = tomorrow
-    englishDate = dtNowLocale().add(1, "day").format("D MMMM YYYY")
-    hijriDate = dtNowLocale().add(1, "day").format("iD iMMMM iYYYY")
+    englishDate = dtFormatDateMonthYearLong(dtNowLocale().plus({days: 1}))
+    hijriDate = dtHijriFormatDateMonthYearLong(dtNowLocale()
+      .plus({ days: 1 })
+    )
   }
 
   let currentSalahTimes: Array<{

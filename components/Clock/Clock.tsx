@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import {
-  dtNowLocaleFormatTime12HourWithTimePeriod,
+  dtNowLocaleFormatTime12hAmPm,
 } from "@/lib/datetimeUtils"
 
 export default function Clock({ darkMode = false }: { darkMode?: boolean }) {
@@ -17,7 +17,7 @@ export default function Clock({ darkMode = false }: { darkMode?: boolean }) {
   }, [])
 
   function getCurrentTimeFormatted() {
-    return dtNowLocaleFormatTime12HourWithTimePeriod()
+    return dtNowLocaleFormatTime12hAmPm()
   }
 
   return (

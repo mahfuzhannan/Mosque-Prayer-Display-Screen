@@ -1,8 +1,13 @@
 import { DailyPrayerTime } from "@/types/DailyPrayerTimeType"
 import { MosqueMetadataType } from "@/types/MosqueDataType"
 import React, { Fragment } from "react"
-import Link from 'next/link'
-import { dtLocale, dtNowLocaleCustomFormat, dtTimeToCustomFormat } from "@/lib/datetimeUtils"
+import Link from "next/link"
+import {
+  dtFormatDateMonthLong,
+  dtFormatDayShort,
+  dtFormatTo12hAmPm,
+  dtLocale, dtNowLocale,
+} from "@/lib/datetimeUtils"
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ")
@@ -15,7 +20,8 @@ export default function Calendar({
   prayerTimes: DailyPrayerTime[]
   metadata: MosqueMetadataType
 }) {
-  const today = dtNowLocaleCustomFormat("D MMMM")
+  const now = dtNowLocale()
+  const today = dtFormatDateMonthLong(now)
   const headers = [
     "Fajr Starts",
     "Fajr Jama'ah",
@@ -83,51 +89,36 @@ export default function Calendar({
               <tbody>
                 {prayerTimes.map((prayerTime, prayerTimeIdx) => {
                   const times = [
-                    dtTimeToCustomFormat(prayerTime.fajr.start, "h:mm a"),
-                    dtTimeToCustomFormat(
-                      prayerTime.fajr.congregation_start,
-                      "h:mm a",
-                    ),
+                    dtFormatTo12hAmPm(prayerTime.fajr.start, ),
+                    dtFormatTo12hAmPm(prayerTime.fajr.congregation_start),
 
-                    dtTimeToCustomFormat(prayerTime.sunrise_start, "h:mm a"),
+                    dtFormatTo12hAmPm(prayerTime.sunrise_start, ),
 
-                    dtTimeToCustomFormat(prayerTime.zuhr.start, "h:mm a"),
-                    dtTimeToCustomFormat(
-                      prayerTime.zuhr.congregation_start,
-                      "h:mm a",
-                    ),
+                    dtFormatTo12hAmPm(prayerTime.zuhr.start, ),
+                    dtFormatTo12hAmPm(prayerTime.zuhr.congregation_start),
 
                     <>
                       <p>
-                        {dtTimeToCustomFormat(prayerTime.asr.start, "h:mm a")}
+                        {dtFormatTo12hAmPm(prayerTime.asr.start)}
                       </p>
                       <p>
-                        {dtTimeToCustomFormat(
-                          prayerTime.asr.start_secondary,
-                          "h:mm a",
-                        )}
+                        {dtFormatTo12hAmPm(prayerTime.asr.start_secondary)}
                       </p>
                     </>,
-                    dtTimeToCustomFormat(
-                      prayerTime.asr.congregation_start,
-                      "h:mm a",
-                    ),
+                    dtFormatTo12hAmPm(prayerTime.asr.congregation_start),
 
-                    dtTimeToCustomFormat(prayerTime.maghrib.start, "h:mm a"),
-                    dtTimeToCustomFormat(
-                      prayerTime.maghrib.congregation_start,
-                      "h:mm a",
-                    ),
+                    dtFormatTo12hAmPm(prayerTime.maghrib.start),
+                    dtFormatTo12hAmPm(prayerTime.maghrib.congregation_start),
 
-                    dtTimeToCustomFormat(prayerTime.isha.start, "h:mm a"),
-                    dtTimeToCustomFormat(prayerTime.isha.congregation_start, "h:mm a"),
+                    dtFormatTo12hAmPm(prayerTime.isha.start),
+                    dtFormatTo12hAmPm(prayerTime.isha.congregation_start),
                   ]
-                  const todayDayName = dtLocale(
+                  const prayerDate = dtLocale(
                     `${prayerTime.day_of_month} ${prayerTime.month_label}`,
-                  ).format("ddd")
-                  const todayDayNumAndMonth = dtLocale(
-                    `${prayerTime.day_of_month} ${prayerTime.month_label}`,
-                  ).format("D MMMM")
+                    "d MMMM",
+                  )
+                  const todayDayName = dtFormatDayShort(prayerDate)
+                  const todayDayNumAndMonth = dtFormatDateMonthLong(prayerDate)
 
                   return (
                     <Fragment
@@ -177,7 +168,7 @@ export default function Calendar({
                             prayerTimeIdx !== prayerTimes.length - 1
                               ? "border-b border-gray-200"
                               : "",
-                            "whitespace-nowrap pl-4 text-left text-sm font-medium",
+                            "pl-2 text-left text-sm font-medium",
                           )}
                           key={`prayerTime_${prayerTime.day_of_month}_${prayerTime.month_label}_day`}
                         >

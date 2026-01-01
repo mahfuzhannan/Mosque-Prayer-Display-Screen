@@ -1,41 +1,46 @@
-import moment from "moment-hijri"
+import { DateTime } from "luxon"
 
 const LOCALE = process.env.LOCALE || "en"
 
-export function dtNow(): moment.Moment {
-  return moment()
+export function dtNow(): DateTime {
+  return DateTime.now()
 }
 
-export function dtNowLocale(): moment.Moment {
-  return moment().locale(LOCALE)
+export function dtNowLocale(): DateTime {
+  return DateTime.now()
 }
 
-export function dtLocale(date: moment.MomentInput, format?: moment.MomentFormatSpecification, strict?: boolean): moment.Moment {
-  return moment(date, format, strict).locale(LOCALE)
+export function dtLocale(
+  date: string | Date,
+  format?: string,
+): DateTime {
+  if (date instanceof Date) {
+    return DateTime.fromJSDate(date)
+  }
+  if (format) {
+    return DateTime.fromFormat(date, format)
+  }
+  return DateTime.fromISO(date)
 }
 
 export function dtNowLocaleCustomFormat(format: string): string {
-  return dtNowLocale().format(format)
+  return dtNowLocale().toFormat(format)
 }
 
 export function dtNowLocalFormatTime24Hour(): string {
-  return dtNowLocale().format("HH:mm")
+  return dtNowLocale().toFormat("HH:mm")
 }
 
 export function dtNowLocalFormatTime12Hour(): string {
-  return dtNowLocale().format("h:mm")
+  return dtNowLocale().toFormat("h:mm")
 }
 
-export function dtNowLocaleFormatTime12HourWithTimePeriod(): string {
-  return dtNowLocale().format("h:mm A")
+export function dtNowLocaleFormatTime12hAmPm(): string {
+  return dtNowLocale().toFormat("h:mm a")
 }
 
 export function dtNowFormatFull(): string {
-  return dtNowLocale().format("D MMMM YYYY")
-}
-
-export function dtNowHijriFormatFull(): string {
-  return dtNowLocale().format("iD iMMMM iYYYY")
+  return dtNowLocale().toFormat("d MMMM yyyy")
 }
 
 export function dtTimeToCustomFormat(time?: string, format?: string): string {
@@ -45,11 +50,151 @@ export function dtTimeToCustomFormat(time?: string, format?: string): string {
   if (!format) {
     return time
   }
-  return moment(time, ["HH:mm", "h:mm", "h:mm A"]).locale(LOCALE).format(format)
+  return dtLocale(time).toFormat(format)
+}
+
+export function dtFormatTo12hAmPm(time?: string): string {
+  if (!time) {
+    return ""
+  }
+  return dtLocale(time).toFormat("h:mm a")
+}
+
+export function dtFormatDayNumber(time?: string | DateTime): string {
+  if (!time) {
+    return ""
+  }
+  return getDateTimeFromAny(time).toFormat("d")
+}
+
+export function dtFormatDayShort(time?: string | DateTime): string {
+  if (!time) {
+    return ""
+  }
+  return getDateTimeFromAny(time).toFormat("ccc")
+}
+
+export function dtFormatDayLong(time?: string | DateTime): string {
+  if (!time) {
+    return ""
+  }
+  return getDateTimeFromAny(time).toFormat("cccd")
+}
+
+export function dtFormatMonthNumber(time?: string | DateTime): string {
+  if (!time) {
+    return ""
+  }
+  return getDateTimeFromAny(time).toFormat("M")
+}
+
+export function dtFormatMonthShort(time?: string | DateTime): string {
+  if (!time) {
+    return ""
+  }
+  return getDateTimeFromAny(time).toFormat("LLL")
+}
+
+export function dtFormatMonthLong(time?: string | DateTime): string {
+  if (!time) {
+    return ""
+  }
+  return getDateTimeFromAny(time).toFormat("LLLL")
+}
+
+export function dtFormatDayDateShort(time?: string | DateTime): string {
+  if (!time) {
+    return ""
+  }
+  return getDateTimeFromAny(time).toFormat("ccc d MMM")
+}
+
+export function dtFormatDateMonthLong(time?: string | DateTime): string {
+  if (!time) {
+    return ""
+  }
+  return getDateTimeFromAny(time).toFormat("d LLLL")
+}
+
+export function dtFormatDateMonthYearLong(time?: string | DateTime): string {
+  if (!time) {
+    return ""
+  }
+  return getDateTimeFromAny(time).toFormat("d LLLL yyyy")
 }
 
 export function dtMonthNumToFullMonth(monthNum: string) {
   return dtNowLocale()
-    .month(parseInt(monthNum, 10) - 1)
-    .format("MMMM")
+    .set({ month: Number(monthNum) })
+    .toFormat("MMMM")
+}
+
+// Hijri funcs
+
+export function dtHijriNow(): DateTime {
+  return dtNowLocale().reconfigure({ outputCalendar: "islamic-umalqura" })
+}
+
+export function dtHijri(date: string | DateTime): DateTime {
+  return getDateTimeFromAny(date).reconfigure({
+    outputCalendar: "islamic-umalqura",
+  })
+}
+
+export function dtHijriNowFormatFull(): string {
+  return dtHijriNow().toFormat("d LLLL yyyy")
+}
+
+export function dtHijriFormatDayNumber(time?: string | DateTime): string {
+  if (!time) {
+    return ""
+  }
+  return dtHijri(time).toFormat("d")
+}
+
+export function dtHijriFormatDayShort(time?: string | DateTime): string {
+  if (!time) {
+    return ""
+  }
+  return dtHijri(time).toFormat("ccc")
+}
+
+export function dtHijriFormatMonthShort(time?: string | DateTime): string {
+  if (!time) {
+    return ""
+  }
+  return dtHijri(time).toFormat("MMM")
+}
+
+
+export function dtHijriFormatMonthLong(time?: string | DateTime): string {
+  if (!time) {
+    return ""
+  }
+  return dtHijri(time).toFormat("MMMM")
+}
+
+
+export function dtHijriFormatYearLong(time?: string | DateTime): string {
+  if (!time) {
+    return ""
+  }
+  return dtHijri(time).toFormat("LLLL")
+}
+
+export function dtHijriFormatDateMonthYearLong(time?: string | DateTime): string {
+  if (!time) {
+    return ""
+  }
+  return dtHijri(time).toFormat("d LLLL yyyy")
+}
+
+// Helper funcs
+
+function getDateTimeFromAny(date: string | DateTime) {
+  if (date instanceof DateTime) {
+    return date
+  }
+
+  return dtLocale(date)
 }

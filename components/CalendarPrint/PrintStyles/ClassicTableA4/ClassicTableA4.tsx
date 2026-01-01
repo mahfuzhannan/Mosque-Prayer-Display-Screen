@@ -2,7 +2,16 @@ import React from "react"
 import { cn } from "@/lib/utils";
 import { CalendarDailyPrayerTime, CalendarPrintComponentProps, CalendarPrintMonthlyPrayerTimes } from "@/types/CalendarPrintType";
 import { MosqueMetadataType } from "@/types/MosqueDataType";
-import { dtLocale } from "@/lib/datetimeUtils"
+import {
+  dtFormatDayShort,
+  dtFormatMonthShort,
+  dtHijri,
+  dtHijriFormatDayNumber,
+  dtHijriFormatMonthLong,
+  dtHijriFormatMonthShort,
+  dtHijriFormatYearLong,
+  dtLocale,
+} from "@/lib/datetimeUtils"
 
 export default function ClassicTableA4({ year, monthly_prayer_times, metadata }: CalendarPrintComponentProps) {
 
@@ -45,10 +54,9 @@ function CalendarTable({ monthly_prayer_times}: { monthly_prayer_times: Calendar
   }
 
   const englishDate = dtLocale(monthly_prayer_times.prayer_times[0].date)
-  const hijriDate = dtLocale(monthly_prayer_times.prayer_times[0].date)
 
-  const monthFormatted = englishDate.format("MMM")
-  const hijriMonthFormatted = hijriDate.format("iMMM")
+  const monthFormatted = dtFormatMonthShort(englishDate)
+  const hijriMonthFormatted = dtHijriFormatMonthShort(englishDate)
 
   const classNamesBeginTimes = "bg-mosqueBrand-primary/80 text-center align-middle font-semibold"
   const classNamesJamahTimes = "bg-mosqueBrand-primary/70 text-center align-middle font-semibold"
@@ -94,11 +102,11 @@ function CalendarRow({ prayer_time }: { prayer_time: CalendarDailyPrayerTime }) 
   // Build the base Gregorian date
   let englishDate = dtLocale(prayer_time.date)
 
-  const hijriDate = englishDate.clone().locale("en");
+  const hijriDate = dtHijri(englishDate)
 
-  const dayFormatted = englishDate.format("ddd");
-  let dayHijriFormatted = hijriDate.format("iD");
-  const hijriMonthFormatted = hijriDate.format("iMMM"); // if you need it
+  const dayFormatted = dtFormatDayShort(englishDate)
+  let dayHijriFormatted = dtHijriFormatDayNumber(hijriDate)
+  const hijriMonthFormatted = dtHijriFormatMonthShort(hijriDate)
 
   if (dayHijriFormatted === "1") {
     dayHijriFormatted = hijriMonthFormatted
@@ -138,14 +146,14 @@ function CalendarHeader({ metadata, year, monthly_prayer_times }: { metadata: Mo
   }
 
   // Start of Gregorian month
-  const start = dtLocale(monthly_prayer_times.prayer_times[0].date).locale("en")
+  const start = dtLocale(monthly_prayer_times.prayer_times[0].date)
   // End of Gregorian month (28 or 29 Feb as appropriate)
-  const end = start.clone().endOf("month").locale("en")
+  const end = start.endOf("month")
 
-  const hijriStartYear = start.format("iYYYY")
-  const hijriEndYear = end.format("iYYYY")
-  const hijriStartMonth = start.format("iMMMM")
-  const hijriEndMonth = end.format("iMMMM")
+  const hijriStartYear = dtHijriFormatYearLong(start)
+  const hijriEndYear = dtHijriFormatYearLong(end)
+  const hijriStartMonth = dtHijriFormatMonthLong(start)
+  const hijriEndMonth = dtHijriFormatMonthLong(end)
 
   let hijriMonthDisplay = hijriStartMonth
   if (hijriStartMonth !== hijriEndMonth) {

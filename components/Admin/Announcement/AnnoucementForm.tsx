@@ -28,8 +28,8 @@ export function AnnouncementForm ({
     const now = dtNowLocale()
 
     // Date YYYY-MM-DD
-    setDate(now.format('YYYY-MM-DD'))
-    setStartTime(now.format('HH:mm'))
+    setDate(now.toFormat('YYYY-MM-DD'))
+    setStartTime(now.toFormat("HH:mm"))
   }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -39,8 +39,8 @@ export function AnnouncementForm ({
       date,
       start_time: startTime,
       end_time: dtLocale(`${date} ${startTime}`).
-        add(duration, 'minutes').
-        format('HH:mm'),
+        plus({minutes: duration}).
+        toFormat('HH:mm'),
       message,
       car_reg_number: type === 'Car' ? carReg : "",
     }

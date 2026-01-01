@@ -80,7 +80,7 @@ export default function EmbedTodayPrayerTimes({}) {
                 <SelectGroup>
                   <SelectLabel>Format</SelectLabel>
                   <SelectItem value="h:mm">h:mm</SelectItem>
-                  <SelectItem value="h:mm A">h:mm A</SelectItem>
+                  <SelectItem value="h:mm a">h:mm a</SelectItem>
                   <SelectItem value="HH:mm">HH:mm</SelectItem>
                 </SelectGroup>
               </SelectContent>

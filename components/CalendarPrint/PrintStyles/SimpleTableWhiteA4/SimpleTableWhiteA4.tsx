@@ -5,7 +5,7 @@ import {
   CalendarPrintComponentProps, CalendarPrintMonthlyPrayerTimes,
 } from '@/types/CalendarPrintType'
 import { MosqueMetadataType } from "@/types/MosqueDataType";
-import { dtLocale } from "@/lib/datetimeUtils"
+import { dtFormatDayShort, dtLocale } from "@/lib/datetimeUtils"
 
 export default function SimpleTableWhiteA4({ year, monthly_prayer_times, metadata }: CalendarPrintComponentProps) {
 
@@ -91,7 +91,7 @@ function CalendarTable({ monthly_prayer_times }: { monthly_prayer_times: Calenda
 
 function CalendarRow({ prayer_time }: { prayer_time: CalendarDailyPrayerTime }) {
   const englishDate = dtLocale(prayer_time.date)
-  const dayFormatted = englishDate.format("ddd");
+  const dayFormatted = dtFormatDayShort(englishDate);
   const isAsrMithl2 = prayer_time.asr.start_secondary !== undefined && prayer_time.asr.start_secondary !== ""
   const isFriday = dayFormatted === "Fri"
 
