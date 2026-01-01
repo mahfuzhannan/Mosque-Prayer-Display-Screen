@@ -7,8 +7,10 @@ import {
 } from "@/services/MosqueDataService"
 import { cn } from "@/lib/utils"
 import {
+  dtHijriNow,
   dtNowFormatFull,
-  dtNowHijriFormatFull, dtNowLocale,
+  dtNowHijriFormatFull,
+  dtNowLocale,
   dtTimeToCustomFormat,
 } from "@/lib/datetimeUtils"
 
@@ -42,7 +44,7 @@ export async function TodayPrayerTime({
     }
     currentDailyPrayerTimes = tomorrow
     englishDate = dtNowLocale().add(1, "day").format("D MMMM YYYY")
-    hijriDate = dtNowLocale().add(1, "day").format("iD iMMMM iYYYY")
+    hijriDate = dtHijriNow().add(1, "day").format("iD iMMMM iYYYY")
   }
 
   let currentSalahTimes: Array<{

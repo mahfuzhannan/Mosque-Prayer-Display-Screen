@@ -1,8 +1,12 @@
 import { DailyPrayerTime } from "@/types/DailyPrayerTimeType"
 import { MosqueMetadataType } from "@/types/MosqueDataType"
 import React, { Fragment } from "react"
-import Link from 'next/link'
-import { dtLocale, dtNowLocaleCustomFormat, dtTimeToCustomFormat } from "@/lib/datetimeUtils"
+import Link from "next/link"
+import {
+  dtLocale,
+  dtNowLocaleCustomFormat,
+  dtTimeToCustomFormat,
+} from "@/lib/datetimeUtils"
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ")
@@ -120,14 +124,16 @@ export default function Calendar({
                     ),
 
                     dtTimeToCustomFormat(prayerTime.isha.start, "h:mm a"),
-                    dtTimeToCustomFormat(prayerTime.isha.congregation_start, "h:mm a"),
+                    dtTimeToCustomFormat(
+                      prayerTime.isha.congregation_start,
+                      "h:mm a",
+                    ),
                   ]
+                  const todayDayNumAndMonth = `${prayerTime.day_of_month} ${prayerTime.month_label}`
                   const todayDayName = dtLocale(
-                    `${prayerTime.day_of_month} ${prayerTime.month_label}`,
+                    `${todayDayNumAndMonth}`,
+                    "D MMMM",
                   ).format("ddd")
-                  const todayDayNumAndMonth = dtLocale(
-                    `${prayerTime.day_of_month} ${prayerTime.month_label}`,
-                  ).format("D MMMM")
 
                   return (
                     <Fragment

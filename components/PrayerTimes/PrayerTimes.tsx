@@ -68,10 +68,11 @@ export default function PrayerTimes({
         </tr>
       </thead>
       <tbody>
-        {PrayerTimesArray.map((prayer, index) => (
-          <tr
-            key={prayer.label}
-            className="
+        {PrayerTimesArray.map((prayer, index) => {
+          return (
+            <tr
+              key={prayer.label}
+              className="
               text-center
               [&>*]:p-4
               md:[&>*]:p-8
@@ -81,46 +82,50 @@ export default function PrayerTimes({
               [&>td:last-of-type]:border-r-0
               border border-mosqueBrand-primaryAlt border-l-0 border-r-0
               last-of-type:border-b-0"
-          >
-            <th className="text-left text-xl md:text-5xl md:text-right">
-              {prayer.label}
-            </th>
-            <td className="text-xl md:text-6xl">
-              {dtTimeToCustomFormat(prayer.data.start, "h:mm")}
-              {prayer.data?.start_secondary ? (
-                <div className="block mt-1 md:mt-2">
-                  {dtTimeToCustomFormat(prayer.data.start_secondary, "h:mm")}
-                </div>
-              ) : null}
-            </td>
-            <td className={`font-bold text-xl md:text-6xl`}>
-              <span
-                className={
-                  nextPrayerTime.today === true &&
-                  nextPrayerTime.prayerIndex === index
-                    ? "underline decoration-mosqueBrand-highlight underline-offset-8"
-                    : ""
-                }
-              >
-                {dtTimeToCustomFormat(prayer.data.congregation_start, "h:mm")}
-              </span>
-            </td>
-            {isTomorrowEnabled && (
-              <td className={`text-xl md:text-6xl`}>
+            >
+              <th className="text-left text-xl md:text-5xl md:text-right">
+                {prayer.label}
+              </th>
+              <td className="text-xl md:text-6xl">
+                {dtTimeToCustomFormat(prayer.data.start, "h:mm")}
+                {prayer.data?.start_secondary ? (
+                  <div className="block mt-1 md:mt-2">
+                    {dtTimeToCustomFormat(prayer.data.start_secondary, "h:mm")}
+                  </div>
+                ) : null}
+              </td>
+              <td className={`font-bold text-xl md:text-6xl`}>
                 <span
                   className={
-                    nextPrayerTime.today === false &&
+                    nextPrayerTime.today === true &&
                     nextPrayerTime.prayerIndex === index
                       ? "underline decoration-mosqueBrand-highlight underline-offset-8"
                       : ""
                   }
                 >
-                  {dtTimeToCustomFormat(prayer.tomorrow.congregation_start, "h:mm")}
+                  {dtTimeToCustomFormat(prayer.data.congregation_start, "h:mm")}
                 </span>
               </td>
-            )}
-          </tr>
-        ))}
+              {isTomorrowEnabled && (
+                <td className={`text-xl md:text-6xl`}>
+                  <span
+                    className={
+                      nextPrayerTime.today === false &&
+                      nextPrayerTime.prayerIndex === index
+                        ? "underline decoration-mosqueBrand-highlight underline-offset-8"
+                        : ""
+                    }
+                  >
+                    {dtTimeToCustomFormat(
+                      prayer.tomorrow.congregation_start,
+                      "h:mm",
+                    )}
+                  </span>
+                </td>
+              )}
+            </tr>
+          )
+        })}
       </tbody>
     </table>
   )
