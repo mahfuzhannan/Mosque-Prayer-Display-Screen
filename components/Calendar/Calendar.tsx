@@ -5,7 +5,7 @@ import Link from "next/link"
 import {
   dtLocale,
   dtNowLocaleCustomFormat,
-  dtTimeToCustomFormat,
+  dtFormatTimeTo12hAmPm,
 } from "@/lib/datetimeUtils"
 
 function classNames(...classes: string[]) {
@@ -87,47 +87,25 @@ export default function Calendar({
               <tbody>
                 {prayerTimes.map((prayerTime, prayerTimeIdx) => {
                   const times = [
-                    dtTimeToCustomFormat(prayerTime.fajr.start, "h:mm a"),
-                    dtTimeToCustomFormat(
-                      prayerTime.fajr.congregation_start,
-                      "h:mm a",
-                    ),
-
-                    dtTimeToCustomFormat(prayerTime.sunrise_start, "h:mm a"),
-
-                    dtTimeToCustomFormat(prayerTime.zuhr.start, "h:mm a"),
-                    dtTimeToCustomFormat(
-                      prayerTime.zuhr.congregation_start,
-                      "h:mm a",
-                    ),
+                    dtFormatTimeTo12hAmPm(prayerTime.fajr.start),
+                    dtFormatTimeTo12hAmPm(prayerTime.fajr.congregation_start),
+                    dtFormatTimeTo12hAmPm(prayerTime.sunrise_start),
+                    dtFormatTimeTo12hAmPm(prayerTime.zuhr.start),
+                    dtFormatTimeTo12hAmPm(prayerTime.zuhr.congregation_start),
 
                     <>
                       <p>
-                        {dtTimeToCustomFormat(prayerTime.asr.start, "h:mm a")}
+                        {dtFormatTimeTo12hAmPm(prayerTime.asr.start)}
                       </p>
                       <p>
-                        {dtTimeToCustomFormat(
-                          prayerTime.asr.start_secondary,
-                          "h:mm a",
-                        )}
+                        {dtFormatTimeTo12hAmPm(prayerTime.asr.start_secondary)}
                       </p>
                     </>,
-                    dtTimeToCustomFormat(
-                      prayerTime.asr.congregation_start,
-                      "h:mm a",
-                    ),
-
-                    dtTimeToCustomFormat(prayerTime.maghrib.start, "h:mm a"),
-                    dtTimeToCustomFormat(
-                      prayerTime.maghrib.congregation_start,
-                      "h:mm a",
-                    ),
-
-                    dtTimeToCustomFormat(prayerTime.isha.start, "h:mm a"),
-                    dtTimeToCustomFormat(
-                      prayerTime.isha.congregation_start,
-                      "h:mm a",
-                    ),
+                    dtFormatTimeTo12hAmPm(prayerTime.asr.congregation_start),
+                    dtFormatTimeTo12hAmPm(prayerTime.maghrib.start),
+                    dtFormatTimeTo12hAmPm(prayerTime.maghrib.congregation_start),
+                    dtFormatTimeTo12hAmPm(prayerTime.isha.start),
+                    dtFormatTimeTo12hAmPm(prayerTime.isha.congregation_start),
                   ]
                   const todayDayNumAndMonth = `${prayerTime.day_of_month} ${prayerTime.month_label}`
                   const todayDayName = dtLocale(

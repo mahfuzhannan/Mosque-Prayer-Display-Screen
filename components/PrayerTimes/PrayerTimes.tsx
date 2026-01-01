@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import { getNextPrayer } from "@/services/PrayerTimeService"
 import { DailyPrayerTime } from "@/types/DailyPrayerTimeType"
 import { useConfiguration } from "@/hooks/useConfiguration"
-import { dtTimeToCustomFormat } from "@/lib/datetimeUtils"
+import { dtFormatTimeTo12h } from "@/lib/datetimeUtils"
 
 export default function PrayerTimes({
   today,
@@ -87,10 +87,10 @@ export default function PrayerTimes({
                 {prayer.label}
               </th>
               <td className="text-xl md:text-6xl">
-                {dtTimeToCustomFormat(prayer.data.start, "h:mm")}
+                {dtFormatTimeTo12h(prayer.data.start)}
                 {prayer.data?.start_secondary ? (
                   <div className="block mt-1 md:mt-2">
-                    {dtTimeToCustomFormat(prayer.data.start_secondary, "h:mm")}
+                    {dtFormatTimeTo12h(prayer.data.start_secondary)}
                   </div>
                 ) : null}
               </td>
@@ -103,7 +103,7 @@ export default function PrayerTimes({
                       : ""
                   }
                 >
-                  {dtTimeToCustomFormat(prayer.data.congregation_start, "h:mm")}
+                  {dtFormatTimeTo12h(prayer.data.congregation_start)}
                 </span>
               </td>
               {isTomorrowEnabled && (
@@ -116,10 +116,7 @@ export default function PrayerTimes({
                         : ""
                     }
                   >
-                    {dtTimeToCustomFormat(
-                      prayer.tomorrow.congregation_start,
-                      "h:mm",
-                    )}
+                    {dtFormatTimeTo12h(prayer.tomorrow.congregation_start)}
                   </span>
                 </td>
               )}

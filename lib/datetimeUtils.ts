@@ -35,7 +35,7 @@ export function dtNowFormatFull(): string {
   return dtNowLocale().format("D MMMM YYYY")
 }
 
-export function dtTimeToCustomFormat(time?: string, format?: string): string {
+export function dtFormatTimeToCustom(time?: string, format?: string): string {
   if (!time) {
     return ""
   }
@@ -45,74 +45,75 @@ export function dtTimeToCustomFormat(time?: string, format?: string): string {
   return dtLocale(time, ["HH:mm", "h:mm", "h:mm a", "h:mm A"]).format(format)
 }
 
-export function dtFormatTo12hAmPm(time?: string): string {
-  if (!time) {
-    return ""
-  }
-  return dtLocale(time).format("h:mm a")
+export function dtFormatTimeTo12hAmPm(time?: string): string {
+  return dtFormatTimeToCustom(time, "h:mm a")
 }
 
-export function dtFormatDayNumber(time?: string | moment.Moment): string {
-  if (!time) {
-    return ""
-  }
-  return dtLocale(time).format("d")
+export function dtFormatTimeTo12h(time?: string): string {
+  return dtFormatTimeToCustom(time, "h:mm")
 }
 
-export function dtFormatDayShort(time?: string | moment.Moment): string {
-  if (!time) {
+export function dtFormatDayNumber(date?: string | moment.Moment): string {
+  if (!date) {
     return ""
   }
-  return dtLocale(time).format("ccc")
+  return dtLocale(date).format("d")
 }
 
-export function dtFormatDayLong(time?: string | moment.Moment): string {
-  if (!time) {
+export function dtFormatDayShort(date?: string | moment.Moment): string {
+  if (!date) {
     return ""
   }
-  return dtLocale(time).format("cccd")
+  return dtLocale(date).format("ddd")
 }
 
-export function dtFormatMonthNumber(time?: string | moment.Moment): string {
-  if (!time) {
+export function dtFormatDayLong(date?: string | moment.Moment): string {
+  if (!date) {
     return ""
   }
-  return dtLocale(time).format("M")
+  return dtLocale(date).format("dddd")
 }
 
-export function dtFormatMonthShort(time?: string | moment.Moment): string {
-  if (!time) {
+export function dtFormatMonthNumber(date?: string | moment.Moment): string {
+  if (!date) {
     return ""
   }
-  return dtLocale(time).format("LLL")
+  return dtLocale(date).format("M")
 }
 
-export function dtFormatMonthLong(time?: string | moment.Moment): string {
-  if (!time) {
+export function dtFormatMonthShort(date?: string | moment.Moment): string {
+  if (!date) {
     return ""
   }
-  return dtLocale(time).format("LLLL")
+  return dtLocale(date).format("MMM")
 }
 
-export function dtFormatDayDateShort(time?: string | moment.Moment): string {
-  if (!time) {
+export function dtFormatMonthLong(date?: string | moment.Moment): string {
+  if (!date) {
     return ""
   }
-  return dtLocale(time).format("ccc d MMM")
+  return dtLocale(date).format("MMMM")
 }
 
-export function dtFormatDateMonthLong(time?: string | moment.Moment): string {
-  if (!time) {
+export function dtFormatDayDateShort(date?: string | moment.Moment): string {
+  if (!date) {
     return ""
   }
-  return dtLocale(time).format("d LLLL")
+  return dtLocale(date).format("ddd D MMM")
 }
 
-export function dtFormatDateMonthYearLong(time?: string | moment.Moment): string {
-  if (!time) {
+export function dtFormatDateMonthLong(date?: string | moment.Moment): string {
+  if (!date) {
     return ""
   }
-  return dtLocale(time).format("d LLLL yyyy")
+  return dtLocale(date).format("D MMMM")
+}
+
+export function dtFormatDateMonthYearLong(date?: string | moment.Moment): string {
+  if (!date) {
+    return ""
+  }
+  return dtLocale(date).format("D MMMM YYYY")
 }
 
 export function dtMonthNumToFullMonth(monthNum: string) {
@@ -128,61 +129,73 @@ export function dtHijriLocale(
   format?: moment.MomentFormatSpecification,
   strict?: boolean,
 ): moment.Moment {
-  return momentHijri(date, format, strict).locale(LOCALE)
+  return momentHijri(date, format, LOCALE, strict)
+}
+
+export function dtHijri(
+  date: moment.MomentInput,
+  format?: moment.MomentFormatSpecification,
+  strict?: boolean,
+): moment.Moment {
+  return momentHijri(date, format, strict)
 }
 
 export function dtHijriNow(): moment.Moment {
   return momentHijri().locale(LOCALE)
 }
 
+export function dtHijriNowLocaleCustomFormat(format: string): string {
+  return dtHijriNow().format(format)
+}
+
 export function dtHijriNowFormatFull(): string {
-  return dtHijriNow().format("d LLLL yyyy")
+  return dtHijriFormatDateMonthYearLong(dtHijriNow())
 }
 
-export function dtHijriFormatDayNumber(time?: string | moment.Moment): string {
-  if (!time) {
+export function dtHijriFormatDayNumber(date?: string | moment.Moment): string {
+  if (!date) {
     return ""
   }
-  return dtHijriLocale(time).format("d")
+  return dtHijriLocale(date).format("d")
 }
 
-export function dtHijriFormatDayShort(time?: string | moment.Moment): string {
-  if (!time) {
+export function dtHijriFormatDayShort(date?: string | moment.Moment): string {
+  if (!date) {
     return ""
   }
-  return dtHijriLocale(time).format("ccc")
+  return dtHijriLocale(date).format("ddd")
 }
 
-export function dtHijriFormatMonthShort(time?: string | moment.Moment): string {
-  if (!time) {
+export function dtHijriFormatMonthShort(date?: string | moment.Moment): string {
+  if (!date) {
     return ""
   }
-  return dtHijriLocale(time).format("MMM")
+  return dtHijriLocale(date).format("iMMM")
 }
 
-export function dtHijriFormatMonthLong(time?: string | moment.Moment): string {
-  if (!time) {
+export function dtHijriFormatMonthLong(date?: string | moment.Moment): string {
+  if (!date) {
     return ""
   }
-  return dtHijriLocale(time).format("MMMM")
+  return dtHijriLocale(date).format("iMMMM")
 }
 
-export function dtHijriFormatYearLong(time?: string | moment.Moment): string {
-  if (!time) {
+export function dtHijriFormatYearLong(date?: string | moment.Moment): string {
+  if (!date) {
     return ""
   }
-  return dtHijriLocale(time).format("LLLL")
+  return dtHijriLocale(date).format("iMMMM")
 }
 
 export function dtHijriFormatDateMonthYearLong(
-  time?: string | moment.Moment,
+  date?: string | moment.Moment,
 ): string {
-  if (!time) {
+  if (!date) {
     return ""
   }
-  return dtHijriLocale(time).format("d LLLL yyyy")
+  return dtHijriLocale(date).format("iD iMMMM iYYYY")
 }
 
 export function dtNowHijriFormatFull(): string {
-  return dtNowLocale().format("iD iMMMM iYYYY")
+  return dtHijriNow().format("iD iMMMM iYYYY")
 }

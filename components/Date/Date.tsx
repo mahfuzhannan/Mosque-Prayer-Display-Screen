@@ -1,10 +1,13 @@
 "use client"
 
-import { dtNowLocaleCustomFormat } from "@/lib/datetimeUtils"
+import {
+  dtHijriNowLocaleCustomFormat,
+  dtNowLocaleCustomFormat,
+} from "@/lib/datetimeUtils"
 
 export default function Date() {
   const englishDate = dtNowLocaleCustomFormat("dddd D MMMM YYYY")
-  const hijriDate = dtNowLocaleCustomFormat("iD iMMMM iYYYY")
+  const hijriDate = dtHijriNowLocaleCustomFormat("iD iMMMM iYYYY")
 
   return (
     <div className="text-mosqueBrand-onPrimary text-center md:text-left">

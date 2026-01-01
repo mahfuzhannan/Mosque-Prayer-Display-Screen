@@ -11,7 +11,7 @@ import {
   dtNowFormatFull,
   dtNowHijriFormatFull,
   dtNowLocale,
-  dtTimeToCustomFormat,
+  dtFormatTimeToCustom,
 } from "@/lib/datetimeUtils"
 
 type Props = {
@@ -28,7 +28,7 @@ export async function TodayPrayerTime({
   showHijri = false,
 }: Props) {
   const convertTime = (time: string) =>
-    dtTimeToCustomFormat(time, timeFormat)
+    dtFormatTimeToCustom(time, timeFormat)
 
   const today: DailyPrayerTime = await getPrayerTimesForToday()
   const tomorrow: DailyPrayerTime = await getPrayerTimesForTomorrow()
