@@ -1,6 +1,6 @@
-'use server'
+"use server"
 
-import { AnnouncementData } from '@/types/AnnouncementType'
+import { AnnouncementData } from "@/types/AnnouncementType"
 import { google, sheets_v4 } from "googleapis"
 import {
   prayerTimeValuesToPrayerTimesJsonSchema,
@@ -8,7 +8,7 @@ import {
   sheetsUtilValuesToJson,
   sheetsUtilValuesToNestedJson,
 } from "@/services/GoogleSheetsUtil"
-import { ConfigurationJson } from '@/types/ConfigurationType'
+import { ConfigurationJson } from "@/types/ConfigurationType"
 import deepmerge from "deepmerge"
 import { configurationDefaults } from "@/config/ConfigurationDefaults"
 import { MosqueData, MosqueMetadataType } from "@/types/MosqueDataType"
@@ -17,7 +17,7 @@ import { JummahTimes } from "@/types/JummahTimesType"
 import { unstable_cache } from "next/cache"
 import { dtNowLocale } from "@/lib/datetimeUtils"
 
-const SPREADSHEET_ID = process.env.SPREADSHEET_ID ?? ''
+const SPREADSHEET_ID = process.env.SPREADSHEET_ID ?? ""
 const ADMIN_GOOGLE_SA_PRIVATE_KEY = process.env.ADMIN_GOOGLE_SA_PRIVATE_KEY
 const ADMIN_GOOGLE_SA_EMAIL = process.env.ADMIN_GOOGLE_SA_EMAIL
 
@@ -29,7 +29,6 @@ const SHEET_NAMES = {
 }
 
 let sheetsClient: sheets_v4.Sheets | null = null
-
 
 export async function getUserSheetsClient() {
   if (sheetsClient) return sheetsClient
@@ -70,127 +69,158 @@ export async function isSheetsClientReady(): Promise<boolean> {
 }
 
 export async function sheetsGetMosqueData(): Promise<MosqueData> {
-  const getCachedData = unstable_cache(async () => {
+  try {
+    const configurationData = await sheetsGetConfigurationData()
+    const prayerTimes = await sheetsGetPrayerData()
+    const jummahTimes = await sheetsGetJummahData()
+    const metaData = await sheetsGetMetadata()
+    return {
+      metadata: metaData,
+      jummah_times: jummahTimes,
+      prayer_times: prayerTimes,
+      config: configurationData,
+    }
+  } catch (error: any) {
+    console.error(error)
+    return {
+      metadata: {},
+      jummah_times: [],
+      prayer_times: [],
+      config: configurationDefaults,
+    }
+  }
+}
+
+const sheetsGetPrayerDataCached = unstable_cache(
+  async () => {
     try {
-      const configurationData = await sheetsGetConfigurationData()
-      const prayerTimes = await sheetsGetPrayerData()
-      const jummahTimes = await sheetsGetJummahData()
-      const metaData = await sheetsGetMetadata()
-      return {
-        metadata: metaData,
-        jummah_times: jummahTimes,
-        prayer_times: prayerTimes,
-        config: configurationData,
-      }
+      const sheets = await getUserSheetsClient()
+      const prayerData = await sheets.spreadsheets.values.get({
+        spreadsheetId: SPREADSHEET_ID,
+        range: SHEET_NAMES.PrayerTimes,
+      })
+      return prayerTimeValuesToPrayerTimesJsonSchema(
+        prayerData?.data?.values ?? [],
+      )
     } catch (error: any) {
       console.error(error)
-      return {
-        metadata: {},
-        jummah_times: [],
-        prayer_times: [],
-        config: configurationDefaults,
-      }
+      throw new Error(`Google Sheets API request failed: ${error?.message}`)
     }
-  }, [], {
-    revalidate: 30
-  })
-
-  return getCachedData()
-
-}
+  },
+  ["sheetsGetPrayerDataCached"],
+  { revalidate: 60 },
+)
 
 export async function sheetsGetPrayerData(): Promise<DailyPrayerTime[]> {
-  try {
-    const sheets = await getUserSheetsClient()
-    const prayerData = await sheets.spreadsheets.values.get({
-      spreadsheetId: SPREADSHEET_ID,
-      range: SHEET_NAMES.PrayerTimes,
-    })
-    return prayerTimeValuesToPrayerTimesJsonSchema(
-      prayerData?.data?.values ?? [],
-    )
-  } catch (error: any) {
-    console.error(error)
-    throw new Error(`Google Sheets API request failed: ${error?.message}`)
-  }
+  return sheetsGetPrayerDataCached()
 }
+
+const sheetsGetJummahDataCached = unstable_cache(
+  async () => {
+    try {
+      const sheets = await getUserSheetsClient()
+      const jummahTimesData = await sheets.spreadsheets.values.get({
+        spreadsheetId: SPREADSHEET_ID,
+        range: SHEET_NAMES.JummahTimes,
+      })
+      return sheetsUtilValuesToJson(
+        jummahTimesData?.data?.values ?? [],
+      ) as JummahTimes
+    } catch (error: any) {
+      console.error(error)
+      throw new Error(`Google Sheets API request failed: ${error?.message}`)
+    }
+  },
+  ["sheetsGetJummahDataCached"],
+  { revalidate: 60 },
+)
 
 export async function sheetsGetJummahData(): Promise<JummahTimes> {
-  try {
-    const sheets = await getUserSheetsClient()
-    const jummahTimesData = await sheets.spreadsheets.values.get({
-      spreadsheetId: SPREADSHEET_ID,
-      range: SHEET_NAMES.JummahTimes,
-    })
-    return sheetsUtilValuesToJson(
-      jummahTimesData?.data?.values ?? [],
-    ) as JummahTimes
-  } catch (error: any) {
-    console.error(error)
-    throw new Error(`Google Sheets API request failed: ${error?.message}`)
-  }
+  return sheetsGetJummahDataCached()
 }
+
+const sheetsGetMetadataCached = unstable_cache(
+  async () => {
+    try {
+      const sheets = await getUserSheetsClient()
+      const metadata = await sheets.spreadsheets.values.get({
+        spreadsheetId: SPREADSHEET_ID,
+        range: SHEET_NAMES.Metadata,
+      })
+      return sheetsUtilValuesToNestedJson(
+        metadata?.data?.values ?? [],
+      ) as MosqueMetadataType
+    } catch (error: any) {
+      console.error(error)
+      throw new Error(`Google Sheets API request failed: ${error?.message}`)
+    }
+  },
+  ["sheetsGetMetadataCached"],
+  { revalidate: 60 },
+)
 
 export async function sheetsGetMetadata(): Promise<MosqueMetadataType> {
-  try {
-    const sheets = await getUserSheetsClient()
-    const metadata = await sheets.spreadsheets.values.get({
-      spreadsheetId: SPREADSHEET_ID,
-      range: SHEET_NAMES.Metadata,
-    })
-    return sheetsUtilValuesToNestedJson(
-      metadata?.data?.values ?? [],
-    ) as MosqueMetadataType
-  } catch (error: any) {
-    console.error(error)
-    throw new Error(`Google Sheets API request failed: ${error?.message}`)
-  }
+  return sheetsGetMetadataCached()
 }
 
+const sheetsGetConfigurationDataCached = unstable_cache(
+  async () => {
+    try {
+      const sheets = await getUserSheetsClient()
+      const configurationData = await sheets.spreadsheets.values.get({
+        spreadsheetId: SPREADSHEET_ID,
+        range: SHEET_NAMES.Configuration,
+      })
+      return deepmerge(
+        configurationDefaults,
+        sheetsUtilValuesToNestedJson(configurationData?.data?.values ?? []),
+      ) as ConfigurationJson
+    } catch (error: any) {
+      console.error(error)
+      throw new Error(`Google Sheets API request failed: ${error?.message}`)
+    }
+  },
+  ["sheetsGetConfigurationDataCached"],
+  { revalidate: 60 },
+)
+
 export async function sheetsGetConfigurationData(): Promise<ConfigurationJson> {
-  try {
-    const sheets = await getUserSheetsClient()
-    const configurationData = await sheets.spreadsheets.values.get({
-      spreadsheetId: SPREADSHEET_ID,
-      range: SHEET_NAMES.Configuration,
-    })
-    return deepmerge(
-      configurationDefaults,
-      sheetsUtilValuesToNestedJson(configurationData?.data?.values ?? []),
-    ) as ConfigurationJson
-  } catch (error: any) {
-    console.error(error)
-    throw new Error(`Google Sheets API request failed: ${error?.message}`)
-  }
+  return sheetsGetConfigurationDataCached()
 }
 
 export async function sheetsGetAnnouncement(): Promise<AnnouncementData | null> {
   const data = await sheetsGetConfigurationData()
-  let announcement = data?.announcement as unknown as AnnouncementData ?? null
+  let announcement = (data?.announcement as unknown as AnnouncementData) ?? null
 
   const now = dtNowLocale()
-  announcement.is_visible = (
-    now.isSame(announcement?.date, 'day')
-    && now.isSameOrAfter(`${announcement?.date} ${announcement?.start_time}`, 'minutes')
-    && now.isBefore(`${announcement?.date} ${announcement?.end_time}`, 'minutes')
-  )
+  announcement.is_visible =
+    now.isSame(announcement?.date, "day") &&
+    now.isSameOrAfter(
+      `${announcement?.date} ${announcement?.start_time}`,
+      "minutes",
+    ) &&
+    now.isBefore(`${announcement?.date} ${announcement?.end_time}`, "minutes")
   return announcement
 }
 
-export async function sheetsUpdateAnnouncement(announcement: AnnouncementData): Promise<void> {
+export async function sheetsUpdateAnnouncement(
+  announcement: AnnouncementData,
+): Promise<void> {
   const data = await sheetsGetConfigurationData()
   data.announcement = announcement
   await sheetsUpdateConfigurationData(data)
 }
 
-export async function sheetsUpdateConfigurationData(data: ConfigurationJson): Promise<void> {
+export async function sheetsUpdateConfigurationData(
+  data: ConfigurationJson,
+): Promise<void> {
   const sheets = await getUserSheetsClient()
   // We need to convert the data from JSON to rows for the Google Sheets API
   const rows = sheetsUtilFlattenedJsonToRows(data)
   await sheets.spreadsheets.values.update({
     spreadsheetId: SPREADSHEET_ID,
     range: SHEET_NAMES.Configuration,
-    valueInputOption: 'USER_ENTERED',
+    valueInputOption: "USER_ENTERED",
     requestBody: {
       values: rows,
     },
