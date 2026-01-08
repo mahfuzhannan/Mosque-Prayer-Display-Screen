@@ -43,7 +43,7 @@ export default async function RightLayoutScreen({
       upcomingPrayerDays={upcomingPrayerDays}
     >
       <div
-        className="bg-mosqueBrand h-screen min-w-full cursor-none"
+        className="bg-mosqueBrand h-screen min-w-full relative cursor-none"
         style={{
           ["--font-scale" as any]: String(config.accessibility.fontScale ?? 1),
         }}
@@ -63,7 +63,7 @@ export default async function RightLayoutScreen({
         </main>
         {config.feature.announcement.enabled && <Announcement />}
         <Blackout prayerTimeToday={today} />
-        <div className={"absolute bottom-0 left-0 opacity-50"}>
+        <div className={"fixed bottom-0 left-0 opacity-50"}>
           <Logo />
         </div>
       </div>

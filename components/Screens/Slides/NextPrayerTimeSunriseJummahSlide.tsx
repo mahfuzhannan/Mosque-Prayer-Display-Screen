@@ -8,7 +8,7 @@ import NextPrayerTimeSlide
 export default function NextPrayerTimeSunriseJummahSlide() {
 
   return (
-    <div className={"flex flex-col gap-3 justify-center "}>
+    <div className={"h-full flex flex-col gap-3 justify-center "}>
       <NextPrayerTimeSlide />
       <SunriseAndJummahSlide />
     </div>

@@ -33,7 +33,7 @@ export default function SunriseAndJummahSlide() {
                 key={index}
                 title={jummahTime.label}
                 value={dtFormatTimeTo12h(jummahTime.time)}
-                className={shouldCenter ? "col-span-2 flex justify-center w-full" : ""}
+                className={shouldCenter ? "col-span-1 flex justify-center w-full" : ""}
                 innerClassName={shouldCenter ? "max-w-md w-full" : ""}
               />
             )

@@ -3,6 +3,13 @@
 import React, { useEffect, useMemo, useState } from "react"
 import type { ConfigurationJson } from "@/types/ConfigurationType"
 import { SCREEN_SLIDES_MAPPING } from "@/components/Screens/Slides/screenSlidesMapping"
+import NextPrayerTimeSunriseJummahSlide
+  from "@/components/Screens/Slides/NextPrayerTimeSunriseJummahSlide"
+import NextPrayerTimeSlide
+  from "@/components/Screens/Slides/NextPrayerTimeSlide"
+import MetadataSlide from "@/components/Screens/Slides/MetadataSlide"
+import SunriseAndJummahSlide
+  from "@/components/Screens/Slides/SunriseAndJummahSlide"
 
 interface ScreenSlidesFactoryProps {
   config: ConfigurationJson
@@ -36,7 +43,7 @@ export default function ScreenSlidesFactory({
   if (!ActiveComponent) return null
 
   return (
-    <div className={"pb-20 w-full h-full flex flex-col"}>
+    <div className={"py-6 mb-4 w-full h-full"}>
       <ActiveComponent />
     </div>
   )
