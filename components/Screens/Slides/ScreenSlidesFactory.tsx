@@ -3,13 +3,6 @@
 import React, { useEffect, useMemo, useState } from "react"
 import type { ConfigurationJson } from "@/types/ConfigurationType"
 import { SCREEN_SLIDES_MAPPING } from "@/components/Screens/Slides/screenSlidesMapping"
-import NextPrayerTimeSunriseJummahSlide
-  from "@/components/Screens/Slides/NextPrayerTimeSunriseJummahSlide"
-import NextPrayerTimeSlide
-  from "@/components/Screens/Slides/NextPrayerTimeSlide"
-import MetadataSlide from "@/components/Screens/Slides/MetadataSlide"
-import SunriseAndJummahSlide
-  from "@/components/Screens/Slides/SunriseAndJummahSlide"
 
 interface ScreenSlidesFactoryProps {
   config: ConfigurationJson

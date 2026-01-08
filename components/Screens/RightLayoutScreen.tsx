@@ -43,7 +43,7 @@ export default async function RightLayoutScreen({
       upcomingPrayerDays={upcomingPrayerDays}
     >
       <div
-        className="bg-mosqueBrand h-screen min-w-full relative cursor-none"
+        className="bg-mosqueBrand h-screen min-w-full relative cursor-none md:overflow-hidden"
         style={{
           ["--font-scale" as any]: String(config.accessibility.fontScale ?? 1),
         }}
