@@ -24,4 +24,8 @@ export interface ConfigurationJson {
 
 type ScreenLayoutOption = "default" | "dynamic-right" | "dynamic-left" | "dynamic-bottom"
 
-type ScreenSlideType = "next-salah-time" | "metadata" // | "next-salah-countdown" | "metadata"
+type ScreenSlideType =
+  | "next-salah-time"
+  | "metadata"
+  | "sunrise-jummah"
+  | "next-salah-sunrise-jummah"

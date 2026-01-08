@@ -3,7 +3,6 @@ import type {
   UpcomingPrayerTimes,
 } from "@/types/DailyPrayerTimeType"
 import {
-  getConfiguration,
   getJummahTimes,
   getMetaData,
   getPrayerTimesForToday,
@@ -13,8 +12,6 @@ import {
 import type { JummahTimes } from "@/types/JummahTimesType"
 import type { MosqueMetadataType } from "@/types/MosqueDataType"
 import { ConfigurationJson } from "@/types/ConfigurationType"
-import SunriseJummahTiles from "@/components/SunriseJummahTiles/SunriseJummahTiles"
-import UpcomingPrayerDayTiles from "@/components/UpcomingPrayerDayTiles/UpcomingPrayerDayTiles"
 import Clock from "@/components/Clock/Clock"
 import Date from "@/components/Date/Date"
 import PrayerTimes from "@/components/PrayerTimes/PrayerTimes"

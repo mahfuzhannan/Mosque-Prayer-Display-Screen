@@ -35,5 +35,9 @@ export default function ScreenSlidesFactory({
 
   if (!ActiveComponent) return null
 
-  return <ActiveComponent />
+  return (
+    <div className={"pb-20 w-full h-full flex flex-col"}>
+      <ActiveComponent />
+    </div>
+  )
 }

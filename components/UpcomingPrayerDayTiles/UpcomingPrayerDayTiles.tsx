@@ -1,5 +1,6 @@
 import { UpcomingPrayerTimes } from "@/types/DailyPrayerTimeType"
 import { dtFormatTimeTo12h } from "@/lib/datetimeUtils"
+import ScreenCard from "@/components/Screens/Components/ScreenCard"
 
 export default function UpcomingPrayerDayTiles({
   times,
@@ -10,54 +11,32 @@ export default function UpcomingPrayerDayTiles({
     <dl
       className={`grid justify-items-stretch lg:grid-cols-6 text-center gap-0 md:gap-3`}
     >
-      <div className="bg-mosqueBrand-primaryAlt text-white p-4 lg:p-6 lg:col-auto">
-        <dt className="text-sm lg:text-2xl font-medium">
-          Jama&apos;ah times for
-        </dt>
-        <dd className="mt-2 text-xl lg:text-3xl font-bold tracking-tight">
-          {times.display_date}
-        </dd>
-      </div>
-      <div className="bg-mosqueBrand-primaryAlt text-white p-4 lg:p-6 lg:col-auto">
-        <dt className="text-sm lg:text-2xl font-medium">
-          Fajr ({times.display_day_label})
-        </dt>
-        <dd className="mt-2 text-xl lg:text-3xl font-bold tracking-tight">
-          {dtFormatTimeTo12h(times.fajr.congregation_start)}
-        </dd>
-      </div>
-      <div className="bg-mosqueBrand-primaryAlt text-white p-4 lg:p-6 lg:col-auto">
-        <dt className="text-sm lg:text-2xl font-medium">
-          Zuhr ({times.display_day_label})
-        </dt>
-        <dd className="mt-2 text-xl lg:text-3xl font-bold tracking-tight">
-          {dtFormatTimeTo12h(times.zuhr.congregation_start)}
-        </dd>
-      </div>
-      <div className="bg-mosqueBrand-primaryAlt text-white p-4 lg:p-6 lg:col-auto">
-        <dt className="text-sm lg:text-2xl font-medium">
-          Asr ({times.display_day_label})
-        </dt>
-        <dd className="mt-2 text-xl lg:text-3xl font-bold tracking-tight">
-          {dtFormatTimeTo12h(times.asr.congregation_start)}
-        </dd>
-      </div>
-      <div className="bg-mosqueBrand-primaryAlt text-white p-4 lg:p-6 lg:col-auto">
-        <dt className="text-sm lg:text-2xl font-medium">
-          Maghrib ({times.display_day_label})
-        </dt>
-        <dd className="mt-2 text-xl lg:text-3xl font-bold tracking-tight">
-          {dtFormatTimeTo12h(times.maghrib.congregation_start)}
-        </dd>
-      </div>
-      <div className="bg-mosqueBrand-primaryAlt text-white p-4 lg:p-6 lg:col-auto">
-        <dt className="text-sm lg:text-2xl font-medium">
-          Isha ({times.display_day_label})
-        </dt>
-        <dd className="mt-2 text-xl lg:text-3xl font-bold tracking-tight">
-          {dtFormatTimeTo12h(times.isha.congregation_start)}
-        </dd>
-      </div>
+      <ScreenCard title="Jama'ah times for" value={times.display_date} />
+
+      <ScreenCard
+        title={`Fajr (${times.display_day_label})`}
+        value={dtFormatTimeTo12h(times.fajr.congregation_start)}
+      />
+
+      <ScreenCard
+        title={`Zuhr (${times.display_day_label})`}
+        value={dtFormatTimeTo12h(times.zuhr.congregation_start)}
+      />
+
+      <ScreenCard
+        title={`Asr (${times.display_day_label})`}
+        value={dtFormatTimeTo12h(times.asr.congregation_start)}
+      />
+
+      <ScreenCard
+        title={`Maghrib (${times.display_day_label})`}
+        value={dtFormatTimeTo12h(times.maghrib.congregation_start)}
+      />
+
+      <ScreenCard
+        title={`Isha (${times.display_day_label})`}
+        value={dtFormatTimeTo12h(times.isha.congregation_start)}
+      />
     </dl>
   )
 }
