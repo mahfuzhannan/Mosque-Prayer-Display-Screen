@@ -38,6 +38,7 @@ export default function ScreenSlidesFactory({
   return (
     <div className={"py-6 mb-4 w-full h-full"}>
       <ActiveComponent />
+      {/*<NextPrayerTimeSlide />*/}
     </div>
   )
 }

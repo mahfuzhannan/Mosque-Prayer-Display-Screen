@@ -1,6 +1,6 @@
 import { JummahTimes } from "@/types/JummahTimesType"
 import { dtFormatTimeTo12h } from "@/lib/datetimeUtils"
-import ScreenCard from "@/components/Screens/Components/ScreenCard"
+import { ScreenTitleCard } from "@/components/Screens/Components/ScreenCard"
 
 export default function SunriseJummahTiles({
   sunrise,
@@ -13,13 +13,13 @@ export default function SunriseJummahTiles({
   return (
     <dl
       className={[
-        "grid text-center w-full grid-flow-col auto-cols-fr gap-0 md:gap-3"
+        "grid text-center w-full grid-flow-col auto-cols-fr gap-0 md:gap-3",
       ].join(" ")}
     >
-      <ScreenCard title={"Sunrise"} value={dtFormatTimeTo12h(sunrise)} />
+      <ScreenTitleCard title={"Sunrise"} value={dtFormatTimeTo12h(sunrise)} />
 
       {jummahTimes.map((jummahTime, index) => (
-        <ScreenCard
+        <ScreenTitleCard
           key={index}
           title={jummahTime.label}
           value={dtFormatTimeTo12h(jummahTime.time)}

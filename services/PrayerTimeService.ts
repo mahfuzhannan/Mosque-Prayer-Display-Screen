@@ -27,16 +27,21 @@ export function isBlackout(prayerTimes: DailyPrayerTime) {
   return setBlackoutMode
 }
 
-export function getNextPrayer(today?: DailyPrayerTime) {
+export function getNextPrayer(today?: DailyPrayerTime, tomorrow?: DailyPrayerTime) {
   let nextPrayertime = {
     today: false,
     prayerIndex: 0,
-    prayerLabel: "",
-    time: "",
+    prayerLabel: getPrayerLabelFromIndex(0),
+    time: tomorrow?.fajr.congregation_start,
   }
 
   if (!today) {
-    return nextPrayertime
+    return {
+      today: false,
+      prayerIndex: 0,
+      prayerLabel: "",
+      time: ""
+    }
   }
 
   const currentTime = dtNowLocale()
