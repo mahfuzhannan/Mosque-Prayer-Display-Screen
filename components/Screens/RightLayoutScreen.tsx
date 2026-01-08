@@ -43,7 +43,7 @@ export default async function RightLayoutScreen({
       upcomingPrayerDays={upcomingPrayerDays}
     >
       <div
-        className="bg-mosqueBrand h-screen min-w-full"
+        className="bg-mosqueBrand h-screen min-w-full cursor-none"
         style={{
           ["--font-scale" as any]: String(config.accessibility.fontScale ?? 1),
         }}
@@ -56,10 +56,7 @@ export default async function RightLayoutScreen({
               <ScreenSlidesFactory config={config} />
             </div>
             <div className="p-4 md:p-6 md:col-span-4">
-              <PrayerTimes
-                today={today}
-                tomorrow={tomorrow}
-              />
+              <PrayerTimes today={today} tomorrow={tomorrow} />
             </div>
           </div>
           <ServiceWorker />

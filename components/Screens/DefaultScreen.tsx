@@ -52,9 +52,7 @@ export default async function DefaultScreen({
   })
 
   return (
-    <div
-      className="bg-mosqueBrand min-h-screen min-w-full"
-    >
+    <div className="bg-mosqueBrand min-h-screen min-w-full cursor-none">
       <main className="md:p-5">
         <div className="md:grid md:grid-cols-8">
           <div className="md:col-span-3">
