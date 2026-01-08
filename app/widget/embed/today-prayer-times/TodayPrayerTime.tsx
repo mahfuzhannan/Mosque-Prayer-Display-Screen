@@ -13,6 +13,7 @@ import {
   dtNowLocale,
   dtFormatTimeToCustom,
 } from "@/lib/datetimeUtils"
+import { FaSun } from "react-icons/fa"
 
 type Props = {
   timeFormat?: "h:mm" | "h:mm A" | "HH:mm"
@@ -27,8 +28,7 @@ export async function TodayPrayerTime({
   showDate = false,
   showHijri = false,
 }: Props) {
-  const convertTime = (time: string) =>
-    dtFormatTimeToCustom(time, timeFormat)
+  const convertTime = (time: string) => dtFormatTimeToCustom(time, timeFormat)
 
   const today: DailyPrayerTime = await getPrayerTimesForToday()
   const tomorrow: DailyPrayerTime = await getPrayerTimesForTomorrow()
@@ -40,7 +40,9 @@ export async function TodayPrayerTime({
   if (!nextPrayerTime.today) {
     nextPrayerTime = {
       today: true,
-      prayerIndex: 0
+      prayerIndex: 0,
+      prayerLabel: "",
+      time: ""
     }
     currentDailyPrayerTimes = tomorrow
     englishDate = dtNowLocale().add(1, "day").format("D MMMM YYYY")
@@ -85,18 +87,18 @@ export async function TodayPrayerTime({
     },
   ]
 
-  if (showSunrise) {
-    currentSalahTimes = [
-      ...currentSalahTimes.slice(0, 1),
-      {
-        label: "Sunrise",
-        start: currentDailyPrayerTimes.sunrise_start,
-        congregation: null,
-        prayerIndex: -1,
-      },
-      ...currentSalahTimes.slice(1),
-    ]
-  }
+  // if (showSunrise) {
+  //   currentSalahTimes = [
+  //     ...currentSalahTimes.slice(0, 1),
+  //     {
+  //       label: "Sunrise",
+  //       start: currentDailyPrayerTimes.sunrise_start,
+  //       congregation: null,
+  //       prayerIndex: -1,
+  //     },
+  //     ...currentSalahTimes.slice(1),
+  //   ]
+  // }
 
   return (
     <div className="PrayerTimeWidgetWrapper">
@@ -104,10 +106,14 @@ export async function TodayPrayerTime({
         <thead>
           {(showDate || showHijri) && (
             <tr>
-              <th className={"pr-6 text-right text-gray-300"}></th>
+              {/*<th*/}
+              {/*  className={"text-sm md:text-base pr-6 text-right text-gray-300"}*/}
+              {/*></th>*/}
               <th
-                colSpan={currentSalahTimes?.length}
-                className={"text-gray-400 font-normal text-center text-md"}
+                colSpan={currentSalahTimes?.length + 1}
+                className={
+                  "text-gray-500 font-normal text-center text-sm md:text-base"
+                }
               >
                 {[showDate && englishDate, showHijri && hijriDate]
                   .filter(Boolean)
@@ -121,7 +127,7 @@ export async function TodayPrayerTime({
               <th
                 key={index}
                 className={cn(
-                  "min-w-[10px] w-24",
+                  "min-w-[10px] w-24 text-sm md:text-base",
                   nextPrayerTime.today &&
                     nextPrayerTime.prayerIndex === value.prayerIndex
                     ? "bg-mosqueBrand-primaryAlt text-mosqueBrand-onPrimary rounded-t-md"
@@ -135,7 +141,11 @@ export async function TodayPrayerTime({
         </thead>
         <tbody>
           <tr>
-            <th className={"text-right text-gray-400 font-medium pr-2"}>
+            <th
+              className={
+                "text-sm md:text-base text-right text-gray-500 font-medium pr-2"
+              }
+            >
               Begins
             </th>
             {currentSalahTimes.map((value, index) => (
@@ -154,7 +164,11 @@ export async function TodayPrayerTime({
             ))}
           </tr>
           <tr>
-            <th className={"text-right text-gray-400 font-medium pr-2"}>
+            <th
+              className={
+                "text-sm md:text-base text-right text-gray-500 font-medium pr-1 md:pr-2"
+              }
+            >
               Jama&apos;ah
             </th>
 
@@ -173,6 +187,20 @@ export async function TodayPrayerTime({
               </td>
             ))}
           </tr>
+          {showSunrise && (
+            <tr>
+              <td></td>
+              <td
+                className={"text-sm md:text-base text-right text-gray-400 pl-2"}
+                colSpan={currentSalahTimes?.length}
+              >
+                <div className={"flex flex-row items-center gap-1"}>
+                  <FaSun style={{color:"orange", opacity: 0.7}} />
+                  Sunrise {currentDailyPrayerTimes.sunrise_start}
+                </div>
+              </td>
+            </tr>
+          )}
         </tbody>
       </table>
     </div>

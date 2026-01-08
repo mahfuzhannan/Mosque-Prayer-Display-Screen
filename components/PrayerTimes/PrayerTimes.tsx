@@ -54,7 +54,7 @@ export default function PrayerTimes({
   }, [today])
 
   return (
-    <table className="text-mosqueBrand-onPrimary mx-auto table-auto border-collapse border-none w-full">
+    <table className="text-mosqueBrand-onPrimary mx-auto table-auto border-collapse border-none w-full h-full">
       <thead>
         <tr
           className="text-center [&>*]:p-2 md:[&>*]:p-8

@@ -27,9 +27,19 @@ export function isBlackout(prayerTimes: DailyPrayerTime) {
   return setBlackoutMode
 }
 
-export function getNextPrayer(today: DailyPrayerTime) {
-  const currentTime = dtNowLocale()
+export function getNextPrayer(today?: DailyPrayerTime) {
+  let nextPrayertime = {
+    today: false,
+    prayerIndex: 0,
+    prayerLabel: "",
+    time: "",
+  }
 
+  if (!today) {
+    return nextPrayertime
+  }
+
+  const currentTime = dtNowLocale()
   const todaysTimes = [
     today.fajr.congregation_start,
     today.zuhr.congregation_start,
@@ -37,20 +47,22 @@ export function getNextPrayer(today: DailyPrayerTime) {
     today.maghrib.congregation_start,
     today.isha.congregation_start,
   ]
-
-  let nextPrayertime = {
-    today: false,
-    prayerIndex: 0,
-  }
-
   todaysTimes.forEach((time, index) => {
     if (currentTime < dtLocale(time, ["HH:mm"]) && !nextPrayertime.today) {
       nextPrayertime = {
         today: true,
         prayerIndex: index,
+        prayerLabel: getPrayerLabelFromIndex(index),
+        time: time,
       }
     }
   })
 
   return nextPrayertime
 }
+
+export function getPrayerLabelFromIndex(index: number): string {
+  return DailyPrayerLabels[index] ?? ""
+}
+
+export const DailyPrayerLabels = ["Fajr", "Zuhr", "Asr", "Maghrib", "Isha"]
