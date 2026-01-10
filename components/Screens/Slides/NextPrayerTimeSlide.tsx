@@ -21,7 +21,7 @@ export default function NextPrayerTimeSlide() {
     <ScreenCard className={`w-full`}>
       <p
         className={cn(
-          "text-xl md:text-3xl font-normal text-mosqueBrand-onPrimary",
+          "text-xl md:text-3xl font-normal text-mosqueBrand-onPrimaryAlt",
         )}
       >
         Next Salah
