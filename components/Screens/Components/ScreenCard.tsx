@@ -11,7 +11,7 @@ export function ScreenTitleCard({ title, value, className = "" }: ScreenCardProp
   return (
     <ScreenCard className={className}>
       <dt className="text-sm lg:text-2xl font-medium">{title}</dt>
-      <dd className="mt-2 text-xl lg:text-3xl font-bold tracking-tight">
+      <dd className="mt-2 text-xl lg:text-5xl font-bold tracking-tight">
         {value}
       </dd>
     </ScreenCard>
